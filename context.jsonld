@@ -1,9 +1,9 @@
 {
   "@context": {
     "@version": 1.1,
-    "@vocab": "https://riurun2023.github.io/Otoano/vocab#",
+    "@vocab": "ttps://riurun0912.github.io/otoano_app/vocab#",
 
-    "otoano": "https://riurun2023.github.io/Otoano/vocab#",
+    "otoano": "ttps://riurun0912.github.io/otoano_app/vocab#",
     "schema": "http://schema.org/",
     "dcterms": "http://purl.org/dc/terms/",
     "mo": "http://purl.org/ontology/mo/",
