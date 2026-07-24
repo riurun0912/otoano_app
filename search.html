@@ -1,0 +1,496 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>横断検索 - Otoano</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<header>
+  <button class="nav-btn" id="navBtn" aria-label="メニューを開く"><span></span><span></span><span></span></button>
+  <a href="index.html" class="site-logo">Otoano</a>
+  <span class="header-page-label">横断検索</span>
+  <div style="flex:1"></div>
+</header>
+
+<style>
+  /* ===== 横断検索：構造化データによる絞り込み（ボタン＋プルダウン） ===== */
+  /* 画面上部を横断する全幅の検索バー */
+  .fs-topbar { background: var(--panel); border-bottom: 1px solid var(--line); padding: 14px 24px; }
+  .fs-topbar input { display: block; width: 100%; max-width: 1180px; margin: 0 auto; padding: 11px 16px; background: var(--bg); border: 1px solid var(--line); border-radius: 10px; color: #fff; font-size: 14px; font-family: inherit; }
+  .fs-topbar input:focus { outline: none; border-color: var(--accent); }
+
+  /* style.css の main{display:grid} を打ち消して通常フローに戻す */
+  main.fs-wrap { display: block; max-width: 1180px; margin: 0 auto; padding: 18px 24px 90px; gap: 0; }
+
+  /* 絞り込みパネル：ヘッダー（件数＋開閉ボタン）＋本体（条件を横に並べる） */
+  .fs-panel { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; margin-bottom: 14px; overflow: hidden; }
+  .fs-panel-head { display: flex; align-items: center; gap: 12px; padding: 12px 16px; }
+  .fs-panel-head .fi-count { font-size: 13.5px; font-weight: 700; color: #fff; }
+  .fs-panel-head .fi-count b { color: var(--accent); font-size: 17px; }
+  .fs-panel-head .fi-note { font-size: 11px; color: var(--muted); }
+  /* 右上の開閉ボタン（押すと本体が縦に閉じる） */
+  .fs-collapse { margin-left: auto; display: inline-flex; align-items: center; gap: 7px; font-size: 12px; font-weight: 700; font-family: inherit; color: #c8d3e8; background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 6px 12px; cursor: pointer; }
+  .fs-collapse:hover { border-color: var(--accent); color: #fff; }
+  .fs-collapse .ft-arrow { font-size: 9px; transition: transform 0.2s; }
+  .fs-collapse.collapsed .ft-arrow { transform: rotate(180deg); }
+
+  .fs-panel-body { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 16px 22px; padding: 4px 16px 16px; }
+  .fs-panel-body.collapsed { display: none; }
+  .fs-row { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+  .fs-row-label { font-size: 11px; font-weight: 700; color: var(--muted); letter-spacing: 0.05em; }
+  .fs-row-body { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+  .fs-row-empty { font-size: 11.5px; color: var(--muted); }
+  /* 年代の範囲指定 */
+  .fs-range { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
+  .fs-range .fsel { flex: 1 1 84px; min-width: 84px; }
+  .fs-range-sep { color: var(--muted); font-size: 12px; }
+
+  /* トグルボタン（項目数が少ない軸） */
+  .fbtn { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; font-family: inherit; color: #c8d3e8; background: var(--bg); border: 1px solid var(--line); border-radius: 99px; padding: 5px 12px; cursor: pointer; transition: all 0.15s; }
+  .fbtn:hover { border-color: rgba(94,162,255,0.5); color: #fff; }
+  .fbtn.is-on { background: rgba(94,162,255,0.15); border-color: var(--accent); color: var(--accent); }
+  .fbtn .fb-n { font-size: 10px; color: var(--muted); }
+  .fbtn.is-on .fb-n { color: var(--accent); opacity: 0.8; }
+
+  /* プルダウン（項目数が多い軸） */
+  .fsel { font-size: 12.5px; font-family: inherit; color: #fff; background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 6px 10px; min-width: 0; width: 100%; max-width: 100%; cursor: pointer; }
+  .fsel:focus { outline: none; border-color: var(--accent); }
+  .fsel optgroup { color: var(--muted); font-style: normal; }
+  .fsel option { color: #fff; background: var(--panel); }
+
+  /* 適用中の条件 */
+  .fs-applied { display: flex; align-items: center; gap: 7px; flex-wrap: wrap; margin-bottom: 12px; }
+  .fs-chip { display: inline-flex; align-items: center; gap: 6px; font-size: 11.5px; font-weight: 600; color: var(--accent); background: rgba(94,162,255,0.1); border: 1px solid rgba(94,162,255,0.28); border-radius: 99px; padding: 4px 8px 4px 11px; }
+  .fs-chip button { background: none; border: none; color: inherit; cursor: pointer; font-size: 13px; line-height: 1; padding: 0 2px; font-family: inherit; }
+  .fs-chip .fc-kind { color: var(--muted); font-weight: 500; }
+  .fs-clear { font-size: 11.5px; color: var(--muted); background: none; border: 1px solid var(--line); border-radius: 99px; padding: 4px 11px; cursor: pointer; font-family: inherit; }
+  .fs-clear:hover { color: #fff; border-color: var(--accent); }
+
+  .fs-info { display: flex; align-items: baseline; gap: 10px; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid var(--line); }
+  .fs-info .fi-count { font-size: 14px; font-weight: 700; color: #fff; }
+  .fs-info .fi-count b { color: var(--accent); font-size: 18px; }
+  .fs-info .fi-note { font-size: 11px; color: var(--muted); margin-left: auto; }
+
+  .fs-empty { color: var(--muted); font-size: 14px; text-align: center; padding: 60px 0; grid-column: 1/-1; line-height: 1.8; }
+
+  @media (max-width: 640px) {
+    .fs-panel-body { grid-template-columns: 1fr; }
+  }
+</style>
+
+<div class="fs-topbar">
+  <input type="text" placeholder="曲名・バンド名・機材名・奏法名で検索..." id="searchInput" autofocus />
+</div>
+
+<main class="fs-wrap">
+  <div class="fs-panel" id="facetPanel">
+    <div class="fs-panel-head">
+      <span class="fi-count" id="resultCount">読み込み中…</span>
+      <span class="fi-note" id="indexNote"></span>
+      <button type="button" class="fs-collapse" id="toggleFilters" aria-label="絞り込みを開閉">絞り込み<span class="ft-arrow">▲</span></button>
+    </div>
+    <div class="fs-panel-body" id="facetBody">
+      <div class="fs-row"><span class="fs-row-label">難易度</span><div class="fs-row-body" data-row="difficulty"></div></div>
+      <div class="fs-row"><span class="fs-row-label">年代</span><div class="fs-row-body" data-row="era"></div></div>
+      <div class="fs-row"><span class="fs-row-label">ジャンル</span><div class="fs-row-body" data-row="genre"></div></div>
+      <div class="fs-row"><span class="fs-row-label">奏法</span><div class="fs-row-body" data-row="technique"></div></div>
+      <div class="fs-row"><span class="fs-row-label">機材</span><div class="fs-row-body" data-row="gear"></div></div>
+    </div>
+  </div>
+
+  <div class="fs-applied" id="appliedFilters"></div>
+  <div class="portal-grid" id="songList">
+    <p class="fs-empty">読み込み中…</p>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <h4>Otoano</h4>
+        <p>音作りや機材を参考に誰でもコピーができる体験や、熟練者のノウハウ共有、奏者の交流を目指す楽器演奏者のためのプラットフォームです。</p>
+      </div>
+      <div class="footer-col">
+        <h4>コンテンツ</h4>
+        <ul class="footer-links">
+          <li><a href="search.html">横断検索</a></li>
+          <li><a href="guide.html">エレキギター初心者ガイド</a></li>
+          <li><a href="band-guide.html">ロックバンド活動ガイド</a></li>
+          <li><a href="terms.html">奏法・機材解説</a></li>
+          <li><a href="usage-guide.html">WEBサイト利用ガイド</a></li>
+          <li><a href="upload.html">アノテーション投稿エディター</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>サポート</h4>
+        <ul class="footer-links">
+          <li><a href="#">このサイトについて</a></li>
+          <li><a href="#">利用規約</a></li>
+          <li><a href="#">プライバシーポリシー</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>SNS</h4>
+        <ul class="footer-links">
+          <li><a href="#">Twitter (X)</a></li>
+          <li><a href="#">Instagram</a></li>
+          <li><a href="#">YouTube</a></li>
+        </ul>
+      </div>
+    </div>
+    <div style="text-align: center; color: var(--muted); font-size: 12px; border-top: 1px solid var(--line); padding-top: 40px;">
+      &copy; 2026 Otoano Development. All rights reserved.
+    </div>
+  </div>
+</footer>
+
+<script src="vocab.js"></script>
+<script src="songs.js"></script>
+<script>
+/* =====================================================
+   横断検索 — 構造化データ（統制語彙）によるファセット絞り込み
+   songs.json に加え、各曲の annotations（JSON-LD）を読み込んで
+   奏法・機材カテゴリのファセットを作る。
+   機材は skos:broader の階層をたどるので、上位カテゴリを選ぶと下位も含まれる。
+===================================================== */
+var searchInput = document.getElementById('searchInput');
+var resultCount = document.getElementById('resultCount');
+var indexNote   = document.getElementById('indexNote');
+var grid        = document.getElementById('songList');
+var panel       = document.getElementById('facetPanel');
+var applied     = document.getElementById('appliedFilters');
+
+var INDEX = [];                 // { song, genres, difficulty, era, techniques, gears, text }
+// era は範囲指定（from〜to）。それ以外は選択した値の配列
+var SEL   = { genre: [], difficulty: [], era: { from: '', to: '' }, technique: [], gear: [] };
+
+function arr(v) { return Array.isArray(v) ? v : (v ? [v] : []); }
+function uniq(a) { return Array.from(new Set(a)); }
+
+/* 索引に存在する年代（10年単位）を、若い順に返す */
+function eraValues() {
+  return uniq(INDEX.map(function(e) { return e.era; }).filter(Boolean))
+    .map(Number).filter(function(n) { return !isNaN(n); })
+    .sort(function(a, b) { return a - b; });
+}
+
+/* 機材idを、その上位カテゴリまで展開する（fx-overdrive → [fx-overdrive, fx-drive, effector]） */
+function gearWithAncestors(id) {
+  var out = [id], cur = id;
+  for (var i = 0; i < 8 && cur; i++) {
+    var sub = OTOANO_GEAR_SUBTYPES.find(function(s) { return s.id === cur; });
+    if (!sub) break;
+    out.push(sub.parent);
+    cur = sub.parent;
+  }
+  return out;
+}
+
+/* 1曲ぶんのアノテーションから、奏法・機材・ジャンル・難易度を抜き出す */
+function harvest(entry, data) {
+  var texts = [];
+  var walk = function(items) {
+    (items || []).forEach(function(it) {
+      if (!it || typeof it !== 'object') return;
+      if (it.gearCategory) entry.gears = entry.gears.concat(gearWithAncestors(it.gearCategory));
+      if (it.aboutTechnique) entry.techniques.push(it.aboutTechnique);
+      ['title', 'note', 'text', 'description'].forEach(function(k) { if (it[k]) texts.push(it[k]); });
+      if (Array.isArray(it.items)) walk(it.items);
+    });
+  };
+  (data.annotations || []).forEach(function(seg) {
+    entry.techniques = entry.techniques.concat(arr(seg.techniques));
+    if (seg.title) texts.push(seg.title);
+    if (seg.description) texts.push(seg.description);
+    walk(seg.items);
+  });
+  walk(data.gearInfo);
+  walk(data.stems);
+  walk(data.references);
+  walk(data.knowledgeInfo);
+  walk(data.globalInfo && data.globalInfo.items);   // 旧形式のファイルにも対応
+  if (data.genre) entry.genres = uniq(entry.genres.concat(arr(data.genre)));
+  if (data.difficulty) entry.difficulty = data.difficulty;
+  entry.techniques = uniq(entry.techniques.filter(Boolean));
+  entry.gears = uniq(entry.gears.filter(Boolean));
+  // 語彙の表示名もキーワード検索の対象にする
+  entry.techniques.forEach(function(t) { texts.push(otoanoTechLabel(t)); });
+  entry.gears.forEach(function(g) { texts.push(otoanoGearCatLabel(g)); });
+  entry.text += ' ' + texts.join(' ').toLowerCase();
+}
+
+/* ---- ファセット定義 ----
+   ui: 'button' … 項目数が少ない軸はトグルボタン
+   ui: 'select' … 項目数が多い軸はプルダウン（選ぶと条件に追加される） */
+function facetDefs() {
+  var techGroups = OTOANO_TECH_GROUPS.map(function(g) {
+    return { label: g.label, options: OTOANO_TECHNIQUES.filter(function(t) { return t.group === g.id; }) };
+  }).filter(function(g) { return g.options.length; });
+
+  // 機材は skos:broader の階層をインデントで表す
+  var gearGroups = OTOANO_GEAR_CATEGORIES.filter(function(c) { return c.id !== 'other'; }).map(function(c) {
+    var opts = [{ id: c.id, label: c.label }];
+    otoanoGearChildren(c.id).forEach(function(k) {
+      opts.push({ id: k.id, label: '　' + k.label });
+      otoanoGearChildren(k.id).forEach(function(gk) { opts.push({ id: gk.id, label: '　　' + gk.label }); });
+    });
+    return { label: c.label, options: opts };
+  });
+
+  return [
+    { key: 'difficulty', title: '難易度', ui: 'button', hint: '易しい順',
+      groups: [{ label: null, options: OTOANO_DIFFICULTIES }] },
+    { key: 'era', title: '年代', ui: 'range' },
+    { key: 'genre', title: 'ジャンル', ui: 'button',
+      groups: [{ label: null, options: OTOANO_GENRES }] },
+    { key: 'technique', title: '奏法', ui: 'select', placeholder: '奏法から選ぶ…',
+      groups: techGroups },
+    { key: 'gear', title: '機材', ui: 'select', placeholder: '機材から選ぶ（上位を選ぶと下位も含む）…',
+      groups: gearGroups }
+  ];
+}
+
+/* ---- 判定（q が空・SEL が空なら全曲が通過し、全楽曲が表示される） ---- */
+function matchesExcept(e, skipKey, q) {
+  if (q && e.text.indexOf(q) < 0) return false;
+  if (skipKey !== 'genre'      && SEL.genre.length      && !SEL.genre.some(function(v) { return e.genres.indexOf(v) >= 0; })) return false;
+  if (skipKey !== 'difficulty' && SEL.difficulty.length && SEL.difficulty.indexOf(e.difficulty) < 0) return false;
+  if (skipKey !== 'era' && (SEL.era.from || SEL.era.to)) {
+    if (!e.era) return false;                        // 年代を指定したら、年代不明の曲は除外
+    var ey = Number(e.era);
+    if (SEL.era.from && ey < Number(SEL.era.from)) return false;
+    if (SEL.era.to   && ey > Number(SEL.era.to))   return false;
+  }
+  if (skipKey !== 'technique'  && SEL.technique.length  && !SEL.technique.some(function(v) { return e.techniques.indexOf(v) >= 0; })) return false;
+  if (skipKey !== 'gear'       && SEL.gear.length       && !SEL.gear.some(function(v) { return e.gears.indexOf(v) >= 0; })) return false;
+  return true;
+}
+function valuesOf(e, key) {
+  return key === 'genre' ? e.genres
+    : key === 'difficulty' ? [e.difficulty]
+    : key === 'era' ? [e.era]
+    : key === 'technique' ? e.techniques
+    : e.gears;
+}
+
+/* ---- 描画 ---- */
+function toggle(key, val) {
+  var i = SEL[key].indexOf(val);
+  if (i >= 0) SEL[key].splice(i, 1); else SEL[key].push(val);
+  render();
+}
+
+function render() {
+  var q = searchInput.value.toLowerCase().trim();
+  var matched = INDEX.filter(function(e) { return matchesExcept(e, null, q); });
+
+  grid.innerHTML = matched.length
+    ? matched.map(function(e) { return buildCard(e.song); }).join('')
+    : '<p class="fs-empty">条件に一致する楽曲が見つかりませんでした。<br />絞り込みを減らすか、キーワードを変えてお試しください。</p>';
+  resultCount.innerHTML = '<b>' + matched.length + '</b> 件';
+
+  // 件数は「その軸を外した集合」で数える（ジャパンサーチ等と同じ挙動）
+  facetDefs().forEach(function(f) {
+    var body = panel.querySelector('[data-row="' + f.key + '"]');
+    if (!body) return;
+
+    if (f.ui === 'range') {
+      // 年代：開始〜終了の2つのプルダウン
+      var years = eraValues();
+      if (!years.length) { body.innerHTML = '<span class="fs-row-empty">該当する年代がありません</span>'; return; }
+      var opts = function(sel) {
+        return '<option value="">指定なし</option>' + years.map(function(y) {
+          return '<option value="' + y + '"' + (String(sel) === String(y) ? ' selected' : '') + '>' + y + '年代</option>';
+        }).join('');
+      };
+      body.innerHTML = '<div class="fs-range">'
+        + '<select class="fsel era-from" aria-label="開始年代">' + opts(SEL.era.from) + '</select>'
+        + '<span class="fs-range-sep">〜</span>'
+        + '<select class="fsel era-to" aria-label="終了年代">' + opts(SEL.era.to) + '</select>'
+        + '</div>';
+      return;
+    }
+
+    var pool = INDEX.filter(function(e) { return matchesExcept(e, f.key, q); });
+    var count = function(id) {
+      return pool.filter(function(e) { return valuesOf(e, f.key).indexOf(id) >= 0; }).length;
+    };
+
+    if (f.ui === 'button') {
+      // 0件かつ未選択の項目は隠して見通しをよくする
+      var btns = [];
+      f.groups.forEach(function(g) {
+        g.options.forEach(function(o) {
+          var n = count(o.id), on = SEL[f.key].indexOf(o.id) >= 0;
+          if (!n && !on) return;
+          btns.push('<button type="button" class="fbtn' + (on ? ' is-on' : '') + '" data-key="' + f.key
+            + '" data-val="' + escHtml(o.id) + '">' + escHtml(o.label)
+            + '<span class="fb-n">' + n + '</span></button>');
+        });
+      });
+      body.innerHTML = btns.length ? btns.join('') : '<span class="fs-row-empty">該当する項目がありません</span>';
+    } else {
+      // プルダウン：すでに選んだ値は選択肢から外し、条件チップ側で管理する
+      var opts = '';
+      f.groups.forEach(function(g) {
+        var rows = g.options.map(function(o) {
+          var n = count(o.id);
+          if (!n || SEL[f.key].indexOf(o.id) >= 0) return '';
+          return '<option value="' + escHtml(o.id) + '">' + escHtml(o.label) + '（' + n + '）</option>';
+        }).join('');
+        if (!rows) return;
+        opts += g.label ? '<optgroup label="' + escHtml(g.label) + '">' + rows + '</optgroup>' : rows;
+      });
+      body.innerHTML = opts
+        ? '<select class="fsel" data-key="' + f.key + '"><option value="">'
+            + escHtml(f.placeholder || '選ぶ…') + '</option>' + opts + '</select>'
+        : '<span class="fs-row-empty">選べる項目がありません</span>';
+    }
+  });
+
+  // 適用中の条件
+  var chips = [];
+  facetDefs().forEach(function(f) {
+    if (f.key === 'era') {
+      if (SEL.era.from || SEL.era.to) {
+        var lbl = (SEL.era.from ? SEL.era.from + '年代' : '')
+          + '〜' + (SEL.era.to ? SEL.era.to + '年代' : '');
+        chips.push('<span class="fs-chip"><span class="fc-kind">年代</span>'
+          + escHtml(lbl) + '<button type="button" data-clear="era">×</button></span>');
+      }
+      return;
+    }
+    SEL[f.key].forEach(function(id) {
+      var label = id;
+      (f.groups || []).forEach(function(g) {
+        var o = g.options.find(function(x) { return x.id === id; });
+        if (o) label = o.label.trim();
+      });
+      chips.push('<span class="fs-chip"><span class="fc-kind">' + escHtml(f.title) + '</span>'
+        + escHtml(label) + '<button type="button" data-key="' + f.key + '" data-val="' + escHtml(id) + '">×</button></span>');
+    });
+  });
+  applied.innerHTML = chips.length
+    ? chips.join('') + '<button type="button" class="fs-clear" id="clearAll">すべて解除</button>'
+    : '<span class="fs-row-empty">絞り込みなし（上のボタン・プルダウンから条件を追加できます）</span>';
+
+  bindFacetEvents();
+}
+
+function bindFacetEvents() {
+  panel.querySelectorAll('.fbtn').forEach(function(b) {
+    b.addEventListener('click', function() { toggle(b.dataset.key, b.dataset.val); });
+  });
+  // 奏法・機材のプルダウン（era は data-key を持たないので除外）
+  panel.querySelectorAll('.fsel[data-key]').forEach(function(s) {
+    s.addEventListener('change', function() {
+      if (!s.value) return;
+      toggle(s.dataset.key, s.value);
+    });
+  });
+  // 年代の範囲プルダウン
+  var ef = panel.querySelector('.era-from'), et = panel.querySelector('.era-to');
+  if (ef) ef.addEventListener('change', function() { SEL.era.from = ef.value; render(); });
+  if (et) et.addEventListener('change', function() { SEL.era.to = et.value; render(); });
+
+  applied.querySelectorAll('.fs-chip button').forEach(function(b) {
+    b.addEventListener('click', function() {
+      if (b.dataset.clear === 'era') { SEL.era = { from: '', to: '' }; render(); return; }
+      toggle(b.dataset.key, b.dataset.val);
+    });
+  });
+  var ca = document.getElementById('clearAll');
+  if (ca) ca.addEventListener('click', function() {
+    Object.keys(SEL).forEach(function(k) { SEL[k] = (k === 'era') ? { from: '', to: '' } : []; });
+    render();
+  });
+}
+
+/* 絞り込み本体の開閉トグル（右上ボタン。押すと条件欄が縦に閉じる） */
+(function () {
+  var btn = document.getElementById('toggleFilters');
+  var body = document.getElementById('facetBody');
+  if (!btn || !body) return;
+  btn.addEventListener('click', function () {
+    var collapsed = body.classList.toggle('collapsed');
+    btn.classList.toggle('collapsed', collapsed);
+  });
+})();
+
+/* URLパラメータ ?q= でキーワードを自動入力 */
+var initQ = new URLSearchParams(location.search).get('q');
+if (initQ) searchInput.value = initQ;
+
+/* songs.json ＋ 各曲のアノテーションを読み込んで索引を作る */
+loadSongs(function(songs) {
+  INDEX = songs.map(function(s) {
+    return {
+      song: s,
+      genres: arr(s.genre),
+      difficulty: s.difficulty || '',
+      era: s.era || '',
+      techniques: [],
+      gears: uniq(arr(s.gear).reduce(function(a, g) { return a.concat(gearWithAncestors(g)); }, [])),
+      text: (s.title + ' ' + s.artist + ' ' + (s.comment || '')).toLowerCase()
+    };
+  });
+  render();
+
+  var withFile = INDEX.filter(function(e) { return e.song.playerFile; });
+  if (!withFile.length) { indexNote.textContent = '楽曲一覧のみで絞り込み中'; return; }
+  Promise.all(withFile.map(function(e) {
+    return fetch(e.song.playerFile + '?_=' + Date.now())
+      .then(function(r) { return r.ok ? r.json() : null; })
+      .then(function(d) { if (d) harvest(e, d); })
+      .catch(function() {});
+  })).then(function() {
+    indexNote.textContent = withFile.length + '件のアノテーションを読み込み済み';
+    render();
+  });
+});
+
+searchInput.addEventListener('input', render);
+</script>
+<div class="nav-overlay" id="navOverlay"></div>
+<nav class="nav-panel" id="navPanel">
+  <div class="nav-panel-head">
+    <a href="index.html" class="nav-panel-logo">Otoano</a>
+    <button class="nav-panel-close" id="navClose">✕</button>
+  </div>
+  <div class="nav-panel-section">
+    <div class="nav-panel-label">メイン</div>
+    <a href="index.html">ホーム</a>
+    <a href="search.html" class="nav-current">横断検索</a><a href="upload.html">アノテーション投稿</a>
+  </div>
+  <div class="nav-panel-section">
+    <div class="nav-panel-label">ガイド</div>
+    <a href="usage-guide.html">サイト利用ガイド</a>
+    <a href="guide.html">エレキギター初心者ガイド</a>
+    <a href="band-guide.html">バンド活動ガイド</a>
+  </div>
+  <div class="nav-panel-section">
+    <div class="nav-panel-label">辞書</div>
+    <a href="terms.html">奏法・機材解説</a>
+  </div>
+  <div class="nav-panel-section">
+    <div class="nav-panel-label">ユーザー情報</div>
+    <a href="account.html" class="nav-mypage-link">アカウント</a>
+    <a href="history.html" class="nav-mypage-link">プレイ履歴</a>
+    <a href="posts.html" class="nav-mypage-link">投稿管理</a>
+  </div>
+</nav>
+<script>
+(function(){
+  var btn=document.getElementById('navBtn'),ov=document.getElementById('navOverlay'),pn=document.getElementById('navPanel'),cl=document.getElementById('navClose');
+  function open(){ov.classList.add('open');pn.classList.add('open');}
+  function close(){ov.classList.remove('open');pn.classList.remove('open');}
+  if(btn)btn.addEventListener('click',open);
+  if(cl)cl.addEventListener('click',close);
+  if(ov)ov.addEventListener('click',close);
+})();
+</script>
+</body>
+</html>

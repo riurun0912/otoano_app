@@ -1,0 +1,64 @@
+{
+  "songs": [
+    {
+      "id": "shishamo-ashitamo",
+      "title": "明日も",
+      "artist": "SHISHAMO",
+      "playerFile": "annotations.json",
+      "coverImage": "imgs/ashita-mo-cover.jpg",
+      "difficulty": "diff-intermediate",
+      "difficultyLabel": "中級",
+      "duration": "3:45",
+      "era": "2010",
+      "genre": ["genre-jpop", "genre-rock"],
+      "gear": ["gt-strat", "multi-effector", "amp-combo"],
+      "rating": 4.8,
+      "featured": true,
+      "contributor": {
+        "name": "ユーザー A",
+        "avatar": "👤"
+      },
+      "comment": "マルチエフェクター一個で再現してみました！BD-2系の歪みがあればいけます。"
+    },
+    {
+      "id": "ajikan-soranin",
+      "title": "ソラニン",
+      "artist": "ASIAN KUNG-FU GENERATION",
+      "playerFile": null,
+      "coverImage": "imgs/solanin-cover.jpg",
+      "difficulty": "diff-easy",
+      "difficultyLabel": "初級",
+      "duration": "4:32",
+      "era": "2010",
+      "genre": ["genre-rock", "genre-alternative"],
+      "gear": ["gt-lespaul", "fx-overdrive"],
+      "rating": 4.9,
+      "featured": true,
+      "contributor": {
+        "name": "アジカン好き",
+        "avatar": "👤"
+      },
+      "comment": "バッキングのアルペジオが最高に気持ちいい曲です。歪ませすぎないのがコツ。"
+    },
+    {
+      "id": "kinggnu-hakujitsu",
+      "title": "白日",
+      "artist": "King Gnu",
+      "playerFile": null,
+      "coverImage": "imgs/hakujitsu-cover.jpg",
+      "difficulty": "diff-advanced",
+      "difficultyLabel": "上級",
+      "duration": "4:35",
+      "era": "2020",
+      "genre": ["genre-jpop"],
+      "gear": ["multi-effector", "fx-chorus"],
+      "rating": 5.0,
+      "featured": true,
+      "contributor": {
+        "name": "ヌー民",
+        "avatar": "👤"
+      },
+      "comment": "コード進行がめちゃくちゃ複雑ですが、アノテーションで一つずつ解説しています。"
+    }
+  ]
+}

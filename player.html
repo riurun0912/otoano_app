@@ -1,0 +1,220 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Otoano Player</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+<header>
+  <button class="nav-btn" id="navBtn" aria-label="メニューを開く"><span></span><span></span><span></span></button>
+  <a href="index.html" class="site-logo">Otoano</a>
+  <div class="pill" id="songTitleDisplay" style="max-width:260px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">読み込み中…</div>
+  <div style="flex:1"></div>
+  <button class="secondary" id="gearInfoBtn">使用機材</button>
+  <button class="secondary" id="knowledgeBtn">用語解説</button>
+</header>
+
+
+<main>
+  <section class="card" id="segmentsCard">
+    <button class="sidebar-toggle" id="sidebarToggle"></button>
+    <h2 id="segmentsHeader">セグメント一覧</h2>
+    <div class="category-filter" id="categoryFilterWrap" style="display:none;">
+      <select id="categorySelect"></select>
+    </div>
+    <div class="system-messages" id="systemMessages"></div>
+    <div class="segments" id="segments"></div>
+  </section>
+
+  <section class="layoutRight">
+    <div class="card" id="playerCard">
+      <div id="playerWrap">
+        <div id="player"></div>
+      </div>
+    </div>
+
+    <div class="card activeArea">
+      <h2>現在のセグメント（再生位置に追従）</h2>
+      <div class="activeBody">
+        <div class="activeTitle" id="activeTitle"></div>
+        <div class="activeMeta" id="activeMeta"></div>
+        <div class="activeDesc" id="activeDesc">再生を開始すると、該当セグメントが表示されます。</div>
+
+        <div>
+          <div class="pill" style="display:inline-block; margin-bottom:10px;">関連カード</div>
+          <div class="items" id="activeItems"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 出典・ライセンスと引き継ぎ編集（共創のための導線） -->
+    <div class="card" id="creditCard" style="display:none;">
+      <h2>このアノテーションについて</h2>
+      <div class="activeBody">
+        <div class="credit-list">
+          <div class="credit-row"><span class="credit-key">投稿者</span><span class="credit-val" id="creditCreator">—</span></div>
+          <div class="credit-row"><span class="credit-key">公開日</span><span class="credit-val" id="creditCreated">—</span></div>
+          <div class="credit-row"><span class="credit-key">最終更新</span><span class="credit-val" id="creditModified">—</span></div>
+          <div class="credit-row"><span class="credit-key">ライセンス</span><span class="credit-val" id="creditLicense">—</span></div>
+          <div class="credit-row" id="creditBasedOnRow" style="display:none;"><span class="credit-key">原典</span><span class="credit-val" id="creditBasedOn">—</span></div>
+        </div>
+        <p class="credit-note" id="creditNote"></p>
+        <button class="primary" id="forkBtn">このアノテーションを引き継いで編集する</button>
+      </div>
+    </div>
+
+    <!-- アノテーション評価セクション -->
+    <div class="card" id="reviewsCard" style="margin-bottom: 20px;">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+        <h2 style="margin: 0;">アノテーションの評価</h2>
+        <!-- 投稿者信頼度バッジ -->
+        <div style="background: linear-gradient(135deg, rgba(255,255,255,0.08), rgba(255,255,255,0.03)); padding: 6px 14px; border-radius: 12px; border: 1px solid rgba(255,215,0,0.3); display: flex; align-items: center; gap: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+          <div style="font-size: 18px; filter: drop-shadow(0 0 5px rgba(255,215,0,0.5));">👤</div>
+          <div style="display: flex; flex-direction: column; line-height: 1.1;">
+            <span style="font-size: 10px; color: var(--muted); font-weight: bold; letter-spacing: 0.5px;">投稿者スコア</span>
+            <span style="font-size: 15px; font-weight: 900; color: #ffd700;">⭐ 4.9</span>
+          </div>
+        </div>
+        </div>
+      <div class="activeBody">
+        <div style="display: flex; align-items: center; justify-content: center; padding: 20px; background: rgba(255,255,255,0.03); border-radius: 15px; margin-bottom: 20px;">
+          <div style="text-align: center;">
+            <div style="font-size: 32px; font-weight: bold; color: var(--accent);">4.8</div>
+            <div class="stars" style="font-size: 20px;">★★★★★</div>
+            <div style="font-size: 12px; color: var(--muted); margin-top: 5px;">24件の評価</div>
+          </div>
+        </div>
+        
+        <div class="review-list">
+          <div class="review-card" style="background: transparent; border: none; border-bottom: 1px solid var(--line); padding: 15px 0; border-radius: 0; margin-bottom: 0;">
+            <div class="review-header" style="margin-bottom: 8px;">
+              <div class="user-name" style="font-size: 14px; font-weight: bold;">音作り職人</div>
+              <div class="stars" style="font-size: 12px;">★★★★★</div>
+            </div>
+            <p class="review-text" style="font-size: 13px; margin: 0; color: #d6def0; line-height: 1.5;">音作りめっちゃ似てました！特にサビの歪みの具合が本物っぽくて練習のテンション上がります。</p>
+          </div>
+
+          <div class="review-card" style="background: transparent; border: none; border-bottom: 1px solid var(--line); padding: 15px 0; border-radius: 0; margin-bottom: 0;">
+            <div class="review-header" style="margin-bottom: 8px;">
+              <div class="user-name" style="font-size: 14px; font-weight: bold;">宅録初心者</div>
+              <div class="stars" style="font-size: 12px;">★★★★☆</div>
+            </div>
+            <p class="review-text" style="font-size: 13px; margin: 0; color: #d6def0; line-height: 1.5;">マルチエフェクターしかもっていないので、細かいパラメータの解説助かります。再現しやすかったです。</p>
+          </div>
+        </div>
+
+        <div class="review-form" style="margin-top: 20px; border-top: 1px solid var(--line); padding-top: 15px;">
+          <p style="font-size: 12px; color: var(--muted); margin-bottom: 10px;">評価とコメントを投稿する</p>
+          <div class="star-rating-input" style="font-size: 20px; color: var(--accent); cursor: pointer; text-align: center; margin-bottom: 10px;">
+            ☆☆☆☆☆
+          </div>
+          <textarea placeholder="アノテーションの感想を書き込んでみましょう.." style="width: 100%; background: rgba(0,0,0,0.2); border: 1px solid var(--line); border-radius: 10px; color: #fff; padding: 10px; font-size: 13px; margin-bottom: 10px; min-height: 60px;"></textarea>
+          <button class="btn-primary" style="width: 100%; font-size:12px; padding:8px 16px;">投稿する</button>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-col">
+        <h4>Otoano</h4>
+        <p>音作りや機材を参考に誰でもコピーができる体験や、熟練者のノウハウ共有、奏者の交流を目指す楽器演奏者のためのプラットフォームです。</p>
+      </div>
+      <div class="footer-col">
+        <h4>コンテンツ</h4>
+        <ul class="footer-links">
+          <li><a href="search.html">横断検索</a></li>
+          <li><a href="guide.html">エレキギター初心者ガイド</a></li>
+          <li><a href="band-guide.html">ロックバンド活動ガイド</a></li>
+          <li><a href="terms.html">奏法・機材解説</a></li>
+          <li><a href="usage-guide.html">WEBサイト利用ガイド</a></li>
+          <li><a href="upload.html">アノテーション投稿エディター</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>サポート</h4>
+        <ul class="footer-links">
+          <li><a href="#">このサイトについて</a></li>
+          <li><a href="#">利用規約</a></li>
+          <li><a href="#">プライバシーポリシー</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>SNS</h4>
+        <ul class="footer-links">
+          <li><a href="#">Twitter (X)</a></li>
+          <li><a href="#">Instagram</a></li>
+          <li><a href="#">YouTube</a></li>
+        </ul>
+      </div>
+    </div>
+    <div style="text-align: center; color: var(--muted); font-size: 12px; border-top: 1px solid var(--line); padding-top: 40px;">
+      &copy; 2026 Otoano Development. All rights reserved.
+    </div>
+  </div>
+</footer>
+
+<div class="modal-overlay" id="gearInfoModal" style="display: none;">
+  <div class="modal-content card">
+    <h2 id="gearInfoHeader">使用機材</h2>
+    <button class="modal-close" id="gearInfoCloseBtn">×</button>
+    <div class="items" id="gearInfoItems"></div>
+  </div>
+</div>
+
+
+<div class="modal-overlay" id="knowledgeModal" style="display: none;">
+  <div class="modal-content card">
+    <h2 id="knowledgeHeader">用語解説</h2>
+    <button class="modal-close" id="knowledgeCloseBtn">×</button>
+    <div class="items" id="knowledgeItems"></div>
+  </div>
+</div>
+
+<script src="vocab.js"></script>
+<script src="script.js"></script>
+<div class="nav-overlay" id="navOverlay"></div>
+<nav class="nav-panel" id="navPanel">
+  <div class="nav-panel-head">
+    <a href="index.html" class="nav-panel-logo">Otoano</a>
+    <button class="nav-panel-close" id="navClose">✕</button>
+  </div>
+  <div class="nav-panel-section">
+    <div class="nav-panel-label">メイン</div>
+    <a href="index.html">ホーム</a>
+    <a href="search.html">横断検索</a><a href="upload.html">アノテーション投稿</a>
+  </div>
+  <div class="nav-panel-section">
+    <div class="nav-panel-label">ガイド</div>
+    <a href="usage-guide.html">サイト利用ガイド</a>
+    <a href="guide.html">エレキギター初心者ガイド</a>
+    <a href="band-guide.html">バンド活動ガイド</a>
+  </div>
+  <div class="nav-panel-section">
+    <div class="nav-panel-label">辞書</div>
+    <a href="terms.html">奏法・機材解説</a>
+  </div>
+  <div class="nav-panel-section">
+    <div class="nav-panel-label">ユーザー情報</div>
+    <a href="account.html" class="nav-mypage-link">アカウント</a>
+    <a href="history.html" class="nav-mypage-link">プレイ履歴</a>
+    <a href="posts.html" class="nav-mypage-link">投稿管理</a>
+  </div>
+</nav>
+<script>
+(function(){
+  var btn=document.getElementById('navBtn'),ov=document.getElementById('navOverlay'),pn=document.getElementById('navPanel'),cl=document.getElementById('navClose');
+  function open(){ov.classList.add('open');pn.classList.add('open');}
+  function close(){ov.classList.remove('open');pn.classList.remove('open');}
+  if(btn)btn.addEventListener('click',open);
+  if(cl)cl.addEventListener('click',close);
+  if(ov)ov.addEventListener('click',close);
+})();
+</script>
+</body>
+</html>

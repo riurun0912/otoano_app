@@ -1,0 +1,327 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>サイト利用ガイド - Otoano</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .guide-page { max-width: 940px; margin: 0 auto; padding: 0 24px 100px; }
+
+    .page-hero { padding: 56px 0 36px; text-align: center; }
+    .page-hero h1 { font-size: 38px; font-weight: 900; margin: 0 0 14px; background: linear-gradient(90deg,#fff 30%,var(--accent)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+    .page-hero p { font-size: 16px; color: var(--muted); line-height: 1.7; max-width: 560px; margin: 0 auto; }
+
+    /* Tab switcher */
+    .tab-bar { display: flex; gap: 4px; background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 4px; width: fit-content; margin: 0 auto 44px; position: sticky; top: 62px; z-index: 40; }
+    .tab-btn { padding: 10px 24px; border-radius: 10px; border: none; background: transparent; color: var(--muted); font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.2s; font-family: inherit; }
+    .tab-btn.active { background: var(--accent); color: #08111f; }
+    .tab-content { display: none; }
+    .tab-content.active { display: block; }
+
+    /* Step */
+    .step { margin-bottom: 56px; }
+    .step + .step { border-top: 1px solid var(--line); padding-top: 48px; }
+    .slide-head { display: flex; align-items: center; gap: 12px; margin-bottom: 8px; }
+    .slide-step-badge { font-size: 11px; font-weight: 800; color: #08111f; background: var(--accent); padding: 4px 12px; border-radius: 99px; letter-spacing: 0.05em; flex-shrink: 0; }
+    .slide-head h3 { font-size: 20px; font-weight: 800; color: #fff; margin: 0; }
+    .step-lead { font-size: 14px; color: var(--muted); line-height: 1.7; margin: 0 0 18px; }
+
+    /* Screenshot frame */
+    .shot { position: relative; border: 1px solid var(--line); border-radius: 14px; overflow: hidden; box-shadow: 0 8px 24px rgba(0,0,0,0.35); background: #000; max-width: 720px; margin: 0 auto; }
+    .shot img { width: 100%; display: block; }
+
+    /* Callout pin (on screenshot) — サイトになじんだ配色・アニメーションなし */
+    .pin { position: absolute; width: 24px; height: 24px; border-radius: 50%; background: var(--accent); color: #08111f; font-size: 13px; font-weight: 800; display: flex; align-items: center; justify-content: center; border: 2px solid var(--bg); box-shadow: 0 2px 5px rgba(0,0,0,0.3); z-index: 3; transform: translate(-50%, -50%); }
+
+    /* Caption list */
+    .slide-caption { max-width: 720px; margin: 18px auto 0; display: grid; gap: 11px; }
+    .cap-row { display: grid; grid-template-columns: 28px 1fr; gap: 12px; align-items: start; }
+    .cap-num { width: 24px; height: 24px; border-radius: 50%; background: var(--accent); color: #08111f; font-size: 13px; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+    .cap-text { font-size: 14px; color: #d6def0; line-height: 1.65; }
+    .cap-text strong { color: var(--accent); }
+    .cap-result { display: inline-block; margin-top: 3px; font-size: 12.5px; color: var(--accent); background: rgba(94,162,255,0.1); border: 1px solid rgba(94,162,255,0.2); padding: 3px 11px; border-radius: 8px; }
+
+    /* CTA */
+    .cta-box { margin-top: 24px; background: linear-gradient(135deg, rgba(94,162,255,0.1), rgba(180,107,255,0.05)); border: 1px solid rgba(94,162,255,0.2); border-radius: 24px; padding: 44px 40px; text-align: center; }
+    .cta-box h2 { font-size: 22px; color: #fff; margin: 0 0 10px; }
+    .cta-box p { color: var(--muted); margin: 0 0 24px; font-size: 15px; }
+    .cta-btns { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+    .btn-outline { padding: 13px 28px; border-radius: 12px; border: 1px solid var(--line); color: var(--text); font-weight: 600; text-decoration: none; font-size: 14px; transition: border-color 0.2s, color 0.2s; }
+    .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+
+    @media (max-width: 600px) {
+      .page-hero h1 { font-size: 28px; }
+      .tab-bar { top: 56px; }
+      .pin { width: 24px; height: 24px; font-size: 12px; }
+    }
+  </style>
+</head>
+<body>
+<header>
+  <button class="nav-btn" id="navBtn" aria-label="メニューを開く"><span></span><span></span><span></span></button>
+  <a href="index.html" class="site-logo">Otoano</a>
+  <span class="header-page-label">サイト利用ガイド</span>
+  <div style="flex:1"></div>
+</header>
+
+<div class="guide-page">
+  <div class="page-hero">
+    <h1>Otoano 利用ガイド</h1>
+    <p>「使う」「作る」、2つの楽しみ方を、実際の画面で解説します。<br>赤い番号の順に操作方法を確認しましょう。</p>
+  </div>
+
+  <div class="tab-bar">
+    <button class="tab-btn active" onclick="switchTab('use', this)">使う — アノテーションを見る</button>
+    <button class="tab-btn" onclick="switchTab('create', this)">作る — アノテーションを投稿</button>
+  </div>
+
+  <!-- =========================== 使う =========================== -->
+  <div class="tab-content active" id="tab-use">
+
+    <!-- STEP 1 -->
+    <div class="step">
+      <div class="slide-head"><span class="slide-step-badge">STEP 1</span><h3>楽曲を探す（ホーム）</h3></div>
+      <p class="step-lead">トップページの検索バーから、練習したい曲を探します。</p>
+      <div class="shot">
+        <img src="imgs/home-screen.png" alt="ホーム画面" />
+        <span class="pin" style="top:33%;left:48%;">1</span>
+        <span class="pin" style="top:33%;left:68%;">2</span>
+        <span class="pin" style="top:75%;left:22%;">3</span>
+      </div>
+      <div class="slide-caption">
+        <div class="cap-row"><span class="cap-num">1</span><div class="cap-text">検索バーに<strong>曲名・バンド名・機材名</strong>を入力します。</div></div>
+        <div class="cap-row"><span class="cap-num">2</span><div class="cap-text"><strong>「検索」ボタン</strong>（またはEnterキー）を押すと…<span class="cap-result">→ 横断検索の結果画面へ移動します</span></div></div>
+        <div class="cap-row"><span class="cap-num">3</span><div class="cap-text">下の<strong>「注目の楽曲」カード</strong>をクリックしても…<span class="cap-result">→ その曲のプレイヤー画面が開きます</span></div></div>
+      </div>
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="step">
+      <div class="slide-head"><span class="slide-step-badge">STEP 2</span><h3>条件で絞り込む（横断検索）</h3></div>
+      <p class="step-lead">年代・ジャンル・難易度・機材で、目的の曲を絞り込めます。</p>
+      <div class="shot">
+        <img src="imgs/cross-search-screen.png" alt="横断検索画面" />
+        <span class="pin" style="top:15%;left:50%;">1</span>
+        <span class="pin" style="top:23%;left:50%;">2</span>
+        <span class="pin" style="top:74%;left:22%;">3</span>
+      </div>
+      <div class="slide-caption">
+        <div class="cap-row"><span class="cap-num">1</span><div class="cap-text">検索バーにキーワードを入力すると、その場で結果が絞られます。</div></div>
+        <div class="cap-row"><span class="cap-num">2</span><div class="cap-text"><strong>4つのフィルター</strong>（年代・ジャンル・難易度・機材）で、さらに条件を追加できます。<span class="cap-result">→ 「自分の機材で弾ける曲」を機材から逆引きできます</span></div></div>
+        <div class="cap-row"><span class="cap-num">3</span><div class="cap-text">各カードには<strong>評価・投稿者のコメント</strong>が表示され、選ぶ参考になります。</div></div>
+      </div>
+    </div>
+
+    <!-- STEP 3 -->
+    <div class="step">
+      <div class="slide-head"><span class="slide-step-badge">STEP 3</span><h3>プレイヤー画面の全体構成</h3></div>
+      <p class="step-lead">プレイヤーは大きく3つのエリアで構成されています。</p>
+      <div class="shot">
+        <img src="imgs/play-screen-standard.png" alt="プレイヤー画面" />
+        <span class="pin" style="top:33%;left:12%;">1</span>
+        <span class="pin" style="top:33%;left:60%;">2</span>
+        <span class="pin" style="top:73%;left:37%;">3</span>
+      </div>
+      <div class="slide-caption">
+        <div class="cap-row"><span class="cap-num">1</span><div class="cap-text"><strong>セグメント一覧</strong>（左）。曲を「イントロ」「Aメロ」などの区間に分けた目次です。</div></div>
+        <div class="cap-row"><span class="cap-num">2</span><div class="cap-text"><strong>メイン動画</strong>（中央）。YouTube動画がそのまま再生されます。</div></div>
+        <div class="cap-row"><span class="cap-num">3</span><div class="cap-text"><strong>現在のセグメント</strong>（下）。再生位置に合わせて説明と関連カードが自動で切り替わります。</div></div>
+      </div>
+    </div>
+
+    <!-- STEP 4 -->
+    <div class="step">
+      <div class="slide-head"><span class="slide-step-badge">STEP 4</span><h3>気になる場面へジャンプ</h3></div>
+      <p class="step-lead">セグメントをクリックすると、その場面へ一瞬で移動します。</p>
+      <div class="shot">
+        <img src="imgs/play-screen-standard.png" alt="セグメントをクリック" />
+        <span class="pin" style="top:57%;left:12%;">1</span>
+        <span class="pin" style="top:33%;left:60%;">2</span>
+      </div>
+      <div class="slide-caption">
+        <div class="cap-row"><span class="cap-num">1</span><div class="cap-text">一覧から<strong>セグメント（例：サビ）をクリック</strong>すると…</div></div>
+        <div class="cap-row"><span class="cap-num">2</span><div class="cap-text"><span class="cap-result">→ 動画がその開始位置までジャンプし、下の解説もその区間に切り替わります</span></div></div>
+      </div>
+    </div>
+
+    <!-- STEP 5 -->
+    <div class="step">
+      <div class="slide-head"><span class="slide-step-badge">STEP 5</span><h3>観点で絞り込む（カテゴリ）</h3></div>
+      <p class="step-lead">セグメントを「奏法」「機材設定」などの観点で絞り込めます。</p>
+      <div class="shot">
+        <img src="imgs/segment-category-selection.png" alt="カテゴリ選択" />
+        <span class="pin" style="top:16%;left:12%;">1</span>
+      </div>
+      <div class="slide-caption">
+        <div class="cap-row"><span class="cap-num">1</span><div class="cap-text">一覧上部の<strong>プルダウン</strong>を開き「奏法／機材設定／その他」を選ぶと…<span class="cap-result">→ その観点のセグメントだけが表示されます</span></div></div>
+      </div>
+    </div>
+
+    <!-- STEP 6 -->
+    <div class="step">
+      <div class="slide-head"><span class="slide-step-badge">STEP 6</span><h3>使用機材をまとめて見る</h3></div>
+      <p class="step-lead">その曲で使われた機材・設定を一覧で確認できます。</p>
+      <div class="shot">
+        <img src="imgs/used-equipment-button-after.png" alt="使用機材モーダル" />
+        <span class="pin" style="top:3%;left:81%;">1</span>
+      </div>
+      <div class="slide-caption">
+        <div class="cap-row"><span class="cap-num">1</span><div class="cap-text">ヘッダー右上の<strong>「使用機材」ボタン</strong>を押すと…<span class="cap-result">→ 画像のように、機材・エフェクター設定の一覧が開きます</span></div></div>
+        <div class="cap-row"><span class="cap-num">+</span><div class="cap-text">同様に、右上の<strong>「パート別音源」</strong>でパート別の音源、<strong>「用語解説」</strong>で演奏に必要な専門用語を、それぞれまとめて確認できます。</div></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- =========================== 作る =========================== -->
+  <div class="tab-content" id="tab-create">
+
+    <!-- STEP 1 -->
+    <div class="step">
+      <div class="slide-head"><span class="slide-step-badge">STEP 1</span><h3>YouTube動画を読み込む</h3></div>
+      <p class="step-lead">まず、練習した曲のYouTube動画を読み込みます。</p>
+      <div class="shot">
+        <img src="imgs/post-screen-standard.png" alt="投稿エディター 初期" />
+        <span class="pin" style="top:22%;left:34%;">1</span>
+        <span class="pin" style="top:22%;left:61%;">2</span>
+        <span class="pin" style="top:27%;left:78%;">3</span>
+      </div>
+      <div class="slide-caption">
+        <div class="cap-row"><span class="cap-num">1</span><div class="cap-text"><strong>YouTube URL または 動画ID</strong>を貼り付けます。</div></div>
+        <div class="cap-row"><span class="cap-num">2</span><div class="cap-text"><strong>「読み込む」</strong>を押すと動画IDを自動抽出します。</div></div>
+        <div class="cap-row"><span class="cap-num">3</span><div class="cap-text"><span class="cap-result">→ 右側に動画プレビューが表示され、準備完了です</span></div></div>
+      </div>
+    </div>
+
+    <!-- STEP 2 -->
+    <div class="step">
+      <div class="slide-head"><span class="slide-step-badge">STEP 2</span><h3>基本情報を入力する</h3></div>
+      <p class="step-lead">楽曲名・アーティスト名・ひとことコメントを入力します。</p>
+      <div class="shot">
+        <img src="imgs/post-screen-basic-info-entered.png" alt="基本情報入力後" />
+        <span class="pin" style="top:33%;left:24%;">1</span>
+        <span class="pin" style="top:33%;left:57%;">2</span>
+        <span class="pin" style="top:44%;left:37%;">3</span>
+      </div>
+      <div class="slide-caption">
+        <div class="cap-row"><span class="cap-num">1</span><div class="cap-text"><strong>楽曲名</strong>を入力します。</div></div>
+        <div class="cap-row"><span class="cap-num">2</span><div class="cap-text"><strong>アーティスト名</strong>を入力します。</div></div>
+        <div class="cap-row"><span class="cap-num">3</span><div class="cap-text"><strong>投稿者のひとことコメント</strong>は、楽曲一覧カードに表示されます。</div></div>
+      </div>
+    </div>
+
+    <!-- STEP 3 -->
+    <div class="step">
+      <div class="slide-head"><span class="slide-step-badge">STEP 3</span><h3>セグメントを作り、時刻を入れる</h3></div>
+      <p class="step-lead">曲を区間（セグメント）に分け、開始・終了時刻を設定します。</p>
+      <div class="shot">
+        <img src="imgs/post-screen-segment-no-edit.png" alt="セグメント追加" />
+        <span class="pin" style="top:83%;left:37%;">1</span>
+        <span class="pin" style="top:47%;left:24%;">2</span>
+        <span class="pin" style="top:39%;left:84%;">3</span>
+      </div>
+      <div class="slide-caption">
+        <div class="cap-row"><span class="cap-num">1</span><div class="cap-text"><strong>「+ セグメントを追加」</strong>で区間を作成します。</div></div>
+        <div class="cap-row"><span class="cap-num">2</span><div class="cap-text">セグメント名・<strong>開始／終了（秒）</strong>・カテゴリ・説明文を入力します。</div></div>
+        <div class="cap-row"><span class="cap-num">3</span><div class="cap-text">動画を再生し<strong>「現在位置を開始／終了時刻に」</strong>を押すと…<span class="cap-result">→ 再生中の秒数が時刻欄に自動入力されます</span></div></div>
+      </div>
+    </div>
+
+    <!-- STEP 4 -->
+    <div class="step">
+      <div class="slide-head"><span class="slide-step-badge">STEP 4</span><h3>関連カードを付ける</h3></div>
+      <p class="step-lead">各セグメントに、実践知（奏法・機材・楽譜など）を紐づけます。</p>
+      <div class="shot">
+        <img src="imgs/post-screen-segment-card-added.png" alt="関連カード追加" />
+        <span class="pin" style="top:92%;left:26%;">1</span>
+        <span class="pin" style="top:63%;left:37%;">2</span>
+      </div>
+      <div class="slide-caption">
+        <div class="cap-row"><span class="cap-num">1</span><div class="cap-text">下のボタンでカードの種類を選びます。<strong>リンク・メモ・YouTube動画・動画ファイル・画像</strong>の5種類が使えます。</div></div>
+        <div class="cap-row"><span class="cap-num">2</span><div class="cap-text"><span class="cap-result">→ 選んだ種類の入力欄が追加され、内容を書き込めます</span>（画像・動画はパスやURLを入力）。</div></div>
+      </div>
+    </div>
+
+    <!-- STEP 5 -->
+    <div class="step">
+      <div class="slide-head"><span class="slide-step-badge">STEP 5</span><h3>使用機材・用語解説を追加する</h3></div>
+      <p class="step-lead">曲全体に関わる機材情報・用語も投稿できます。</p>
+      <div class="shot">
+        <img src="imgs/post-screen-standard.png" alt="使用機材・用語解説" />
+        <span class="pin" style="top:66%;left:16%;">1</span>
+        <span class="pin" style="top:86%;left:16%;">2</span>
+      </div>
+      <div class="slide-caption">
+        <div class="cap-row"><span class="cap-num">1</span><div class="cap-text"><strong>「使用機材」</strong>にエフェクター設定やアンプの種類を追加。<span class="cap-result">→ プレイヤーの「使用機材」ボタンに表示されます</span></div></div>
+        <div class="cap-row"><span class="cap-num">2</span><div class="cap-text"><strong>「用語解説」</strong>に演奏に必要な専門用語を追加。<span class="cap-result">→ プレイヤーの「用語解説」ボタンに表示されます</span></div></div>
+      </div>
+    </div>
+
+    <!-- STEP 6 -->
+    <div class="step">
+      <div class="slide-head"><span class="slide-step-badge">STEP 6</span><h3>ダウンロードして完成</h3></div>
+      <p class="step-lead">完成したら、アノテーションをファイルとして書き出します。</p>
+      <div class="shot">
+        <img src="imgs/post-screen-standard.png" alt="JSONダウンロード" />
+        <span class="pin" style="top:3%;left:92%;">1</span>
+        <span class="pin" style="top:73%;left:78%;">2</span>
+      </div>
+      <div class="slide-caption">
+        <div class="cap-row"><span class="cap-num">1</span><div class="cap-text">右上（または右下）の<strong>「JSONをダウンロード」</strong>を押すと…<span class="cap-result">→ annotations.json が保存されます</span></div></div>
+        <div class="cap-row"><span class="cap-num">2</span><div class="cap-text">作業を中断したいときは<strong>「下書き保存」</strong>。次に開いたとき自動で復元されます。既存のJSONを読み込んで再編集もできます。</div></div>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="cta-box">
+    <h2>さっそく始めよう</h2>
+    <p>練習する曲を探すか、あなたの知識を投稿してみましょう。</p>
+    <div class="cta-btns">
+      <a href="search.html" class="btn-primary" style="padding:14px 32px; font-size:15px;">楽曲を探す</a>
+      <a href="upload.html" class="btn-outline" style="padding:14px 32px; font-size:15px;">アノテーションを投稿</a>
+    </div>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-col"><h4>Otoano</h4><p>音作りや機材を参考に誰でもコピーができる体験や、熟練者のノウハウ共有、奏者の交流を目指す楽器演奏者のためのプラットフォームです。</p></div>
+      <div class="footer-col"><h4>コンテンツ</h4><ul class="footer-links"><li><a href="search.html">横断検索</a></li><li><a href="guide.html">エレキギター初心者ガイド</a></li><li><a href="band-guide.html">バンド活動ガイド</a></li><li><a href="terms.html">奏法・機材解説</a></li><li><a href="usage-guide.html">サイト利用ガイド</a></li><li><a href="upload.html">アノテーション投稿エディター</a></li></ul></div>
+      <div class="footer-col"><h4>サポート</h4><ul class="footer-links"><li><a href="#">このサイトについて</a></li><li><a href="#">利用規約</a></li><li><a href="#">プライバシーポリシー</a></li></ul></div>
+      <div class="footer-col"><h4>SNS</h4><ul class="footer-links"><li><a href="#">Twitter (X)</a></li><li><a href="#">Instagram</a></li><li><a href="#">YouTube</a></li></ul></div>
+    </div>
+    <div style="text-align:center;color:var(--muted);font-size:12px;border-top:1px solid var(--line);padding-top:40px;">&copy; 2026 Otoano Development. All rights reserved.</div>
+  </div>
+</footer>
+
+<div class="nav-overlay" id="navOverlay"></div>
+<nav class="nav-panel" id="navPanel">
+  <div class="nav-panel-head"><a href="index.html" class="nav-panel-logo">Otoano</a><button class="nav-panel-close" id="navClose">✕</button></div>
+  <div class="nav-panel-section"><div class="nav-panel-label">メイン</div><a href="index.html">ホーム</a><a href="search.html">横断検索</a><a href="upload.html">アノテーション投稿</a></div>
+  <div class="nav-panel-section"><div class="nav-panel-label">ガイド</div><a href="usage-guide.html" class="nav-current">サイト利用ガイド</a><a href="guide.html">エレキギター初心者ガイド</a><a href="band-guide.html">バンド活動ガイド</a></div>
+  <div class="nav-panel-section"><div class="nav-panel-label">辞書</div><a href="terms.html">奏法・機材解説</a></div>
+  <div class="nav-panel-section"><div class="nav-panel-label">ユーザー情報</div><a href="account.html" class="nav-mypage-link">アカウント</a><a href="history.html" class="nav-mypage-link">プレイ履歴</a><a href="posts.html" class="nav-mypage-link">投稿管理</a></div>
+</nav>
+
+<script>
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+  document.getElementById('tab-' + id).classList.add('active');
+  btn.classList.add('active');
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+(function(){
+  var btn=document.getElementById('navBtn'),ov=document.getElementById('navOverlay'),pn=document.getElementById('navPanel'),cl=document.getElementById('navClose');
+  function open(){ov.classList.add('open');pn.classList.add('open');}
+  function close(){ov.classList.remove('open');pn.classList.remove('open');}
+  if(btn)btn.addEventListener('click',open);
+  if(cl)cl.addEventListener('click',close);
+  if(ov)ov.addEventListener('click',close);
+})();
+</script>
+</body>
+</html>

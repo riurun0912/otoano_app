@@ -1,0 +1,82 @@
+{
+  "@context": {
+    "@version": 1.1,
+    "@vocab": "https://riurun2023.github.io/Otoano/vocab#",
+
+    "otoano": "https://riurun2023.github.io/Otoano/vocab#",
+    "schema": "http://schema.org/",
+    "dcterms": "http://purl.org/dc/terms/",
+    "mo": "http://purl.org/ontology/mo/",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "owl": "http://www.w3.org/2002/07/owl#",
+    "xsd": "http://www.w3.org/2001/XMLSchema#",
+
+    "id": "@id",
+    "type": "@type",
+
+    "title": "schema:name",
+    "name": "schema:name",
+    "artist": "schema:byArtist",
+    "comment": "schema:comment",
+    "description": "schema:description",
+    "note": "schema:description",
+    "text": "schema:text",
+    "version": "schema:version",
+    "sameAs": { "@id": "owl:sameAs", "@type": "@id", "@container": "@set" },
+
+    "creator":  "dcterms:creator",
+    "created":  { "@id": "dcterms:created",  "@type": "xsd:date" },
+    "modified": { "@id": "dcterms:modified", "@type": "xsd:date" },
+    "license":  { "@id": "dcterms:license",  "@type": "@id" },
+    "isBasedOn": { "@id": "schema:isBasedOn", "@type": "@id" },
+
+    "videoId": "otoano:youtubeVideoId",
+    "part": { "@id": "otoano:part", "@type": "@vocab" },
+    "genre": { "@id": "schema:genre", "@type": "@vocab", "@container": "@set" },
+    "difficulty": { "@id": "otoano:difficulty", "@type": "@vocab" },
+
+    "annotations": { "@id": "otoano:hasSegment", "@container": "@set" },
+    "start": { "@id": "otoano:start", "@type": "xsd:decimal" },
+    "end": { "@id": "otoano:end", "@type": "xsd:decimal" },
+    "category": { "@id": "otoano:category", "@type": "@vocab" },
+    "categories": { "@id": "otoano:category", "@type": "@vocab", "@container": "@set" },
+    "techniques": { "@id": "otoano:usesTechnique", "@type": "@vocab", "@container": "@set" },
+    "usesGear": { "@id": "otoano:usesGear", "@type": "@id", "@container": "@set" },
+
+    "items": { "@id": "schema:hasPart", "@container": "@set" },
+    "gearInfo": { "@id": "otoano:hasGearInfo", "@container": "@set" },
+    "stems": { "@id": "otoano:hasStem", "@container": "@set" },
+    "references": { "@id": "schema:citation", "@container": "@set" },
+    "knowledgeInfo": "otoano:hasGlossary",
+    "globalInfo": "otoano:hasGearInfo",
+
+    "url": { "@id": "schema:url", "@type": "@id" },
+    "src": { "@id": "schema:contentUrl", "@type": "@id" },
+    "startTime": { "@id": "otoano:startTime", "@type": "xsd:decimal" },
+
+    "gearCategory": { "@id": "otoano:gearCategory", "@type": "@vocab" },
+    "settings": { "@id": "otoano:hasSetting", "@container": "@set" },
+    "param": { "@id": "otoano:paramConcept", "@type": "@vocab" },
+    "value": "schema:value",
+    "unit": "schema:unitText",
+
+    "aboutTechnique": { "@id": "otoano:aboutTechnique", "@type": "@vocab" },
+    "termCategory": { "@id": "otoano:termCategory", "@type": "@vocab" },
+
+    "progression": { "@id": "otoano:chordProgression", "@type": "@json" },
+    "timeSignature": { "@id": "otoano:timeSignature", "@type": "@json" },
+    "syncStart": { "@id": "otoano:syncStart", "@type": "xsd:decimal" },
+    "format": "schema:encodingFormat",
+    "renderOptions": { "@id": "otoano:renderOptions", "@type": "@json" },
+
+    "video": "schema:VideoObject",
+    "videofile": "schema:VideoObject",
+    "image": "schema:ImageObject",
+    "link": "schema:WebPage",
+    "group": "schema:Collection",
+    "chord": "otoano:ChordProgression",
+    "score": "otoano:Score",
+    "gear": "otoano:GearUsage",
+    "term": "schema:DefinedTerm"
+  }
+}

@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>奏法・機材解説 - Otoano</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* ===== Layout ===== */
+    .terms-wrap { display: grid; grid-template-columns: 240px 1fr; gap: 32px; max-width: 1180px; margin: 0 auto; padding: 32px 24px 100px; }
+
+    /* ===== Sidebar ===== */
+    .terms-sidebar { position: sticky; top: 68px; height: fit-content; display: flex; flex-direction: column; gap: 16px; }
+
+    .search-box { position: relative; }
+    .search-box input { width: 100%; padding: 10px 14px 10px 38px; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; color: #fff; font-size: 13px; font-family: inherit; transition: border-color 0.2s; }
+    .search-box input:focus { outline: none; border-color: var(--accent); }
+    .search-box::before { content: ""; position: absolute; left: 13px; top: 50%; transform: translateY(-50%); width: 14px; height: 14px; border: 1.5px solid var(--muted); border-radius: 50%; }
+    .search-box::after { content: ""; position: absolute; left: 24px; top: 50%; transform: translateY(-50%) rotate(45deg); width: 5px; height: 1.5px; background: var(--muted); margin-top: 4px; }
+
+    .sidebar-section { background: var(--panel); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+    .sidebar-section-label { padding: 10px 14px; font-size: 10px; font-weight: 700; color: var(--muted); letter-spacing: 0.08em; border-bottom: 1px solid var(--line); }
+    .sidebar-link { display: flex; align-items: center; gap: 10px; padding: 10px 14px; color: var(--muted); text-decoration: none; font-size: 13px; font-weight: 500; transition: background 0.15s, color 0.15s; border-bottom: 1px solid var(--line); }
+    .sidebar-link:last-child { border-bottom: none; }
+    .sidebar-link:hover { background: rgba(255,255,255,0.04); color: var(--text); }
+    .sidebar-link.active { color: var(--accent); background: rgba(94,162,255,0.06); border-left: 3px solid var(--accent); padding-left: 11px; }
+    .sidebar-dot { width: 6px; height: 6px; border-radius: 50%; background: currentColor; flex-shrink: 0; opacity: 0.5; }
+    .sidebar-link.active .sidebar-dot { opacity: 1; }
+    .sidebar-count { margin-left: auto; font-size: 10px; color: var(--muted); opacity: 0.7; }
+
+    .result-count { font-size: 12px; color: var(--muted); text-align: center; padding: 6px; }
+    .vocab-note { font-size: 11px; color: var(--muted); line-height: 1.7; padding: 12px 14px; background: var(--panel); border: 1px solid var(--line); border-radius: 14px; }
+
+    /* ===== Content ===== */
+    .terms-content { min-width: 0; }
+
+    .term-section { margin-bottom: 56px; scroll-margin-top: 72px; }
+
+    .section-header { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; padding-bottom: 14px; border-bottom: 1px solid var(--line); }
+    .section-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+    .icon-technique { background: rgba(94,162,255,0.15); border: 1px solid rgba(94,162,255,0.3); }
+    .icon-equipment { background: rgba(255,180,60,0.12); border: 1px solid rgba(255,180,60,0.25); }
+    .icon-theory { background: rgba(180,107,255,0.12); border: 1px solid rgba(180,107,255,0.25); }
+    .section-header h2 { font-size: 20px; font-weight: 800; color: #fff; margin: 0; }
+    .section-header .section-count { margin-left: auto; font-size: 12px; color: var(--muted); background: var(--line); padding: 3px 10px; border-radius: 99px; }
+
+    /* ===== Group（奏法グループ／エフェクターの系統） ===== */
+    .term-group { margin-bottom: 30px; scroll-margin-top: 72px; }
+    .group-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 10px; }
+    .group-title { font-size: 14px; font-weight: 800; color: #fff; margin: 0; }
+    .group-title::before { content: ""; display: inline-block; width: 3px; height: 13px; background: var(--accent); border-radius: 2px; margin-right: 8px; vertical-align: -1px; }
+    .group-count { font-size: 11px; color: var(--muted); }
+    .group-lead { font-size: 13px; color: var(--muted); line-height: 1.75; margin: 0 0 14px; padding-left: 11px; border-left: 1px solid var(--line); }
+
+    /* ===== Term Cards ===== */
+    .term-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 14px; align-items: start; }
+    .term-card { background: var(--panel); border: 1px solid var(--line); border-radius: 18px; padding: 0; overflow: hidden; transition: border-color 0.2s, transform 0.15s; scroll-margin-top: 72px; }
+    .term-card:hover { border-color: rgba(94,162,255,0.35); transform: translateY(-2px); }
+
+    .term-card-head { padding: 16px 20px 12px; display: flex; align-items: flex-start; justify-content: space-between; gap: 10px; }
+    .term-name { font-size: 16px; font-weight: 800; color: #fff; margin: 0; line-height: 1.4; }
+    .term-badge { flex-shrink: 0; font-size: 10px; font-weight: 700; padding: 3px 10px; border-radius: 99px; margin-top: 3px; letter-spacing: 0.04em; }
+    .badge-technique { background: rgba(94,162,255,0.15); color: var(--accent); border: 1px solid rgba(94,162,255,0.3); }
+    .badge-equipment { background: rgba(255,180,60,0.12); color: #ffb43c; border: 1px solid rgba(255,180,60,0.25); }
+    .badge-theory { background: rgba(180,107,255,0.12); color: #b46bff; border: 1px solid rgba(180,107,255,0.25); }
+
+    .term-divider { height: 1px; background: var(--line); margin: 0; }
+
+    .term-card-body { padding: 14px 20px 16px; }
+    .term-desc { font-size: 13px; color: #c8d3e8; line-height: 1.8; margin: 0 0 12px; }
+
+    .term-tags { display: flex; gap: 6px; flex-wrap: wrap; }
+    .term-tag { font-size: 11px; color: var(--muted); background: var(--bg); border: 1px solid var(--line); padding: 2px 8px; border-radius: 99px; }
+    .term-tag.is-path { color: var(--accent); border-color: rgba(94,162,255,0.28); background: rgba(94,162,255,0.06); }
+
+    /* 外部リンクは飛び先（ギター博士／Wikipedia）を明示する */
+    .term-links { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--line); }
+    .term-links-label { font-size: 10px; font-weight: 700; color: var(--muted); letter-spacing: 0.05em; }
+    .term-link { display: inline-flex; align-items: center; gap: 4px; color: var(--accent); text-decoration: none; font-size: 12px; font-weight: 600; padding: 4px 10px; border-radius: 8px; border: 1px solid rgba(94,162,255,0.25); background: rgba(94,162,255,0.06); transition: background 0.15s; white-space: nowrap; }
+    .term-link:hover { background: rgba(94,162,255,0.12); }
+
+    /* 旧アンカー互換用（高さゼロの目印） */
+    .anchor-alias { display: block; height: 0; overflow: hidden; scroll-margin-top: 72px; }
+
+    /* No results */
+    .no-results { display: none; padding: 60px 20px; text-align: center; color: var(--muted); }
+    .no-results .nr-icon { font-size: 32px; margin-bottom: 12px; opacity: 0.3; }
+    .no-results p { font-size: 14px; }
+
+    @media (max-width: 720px) {
+      .terms-wrap { grid-template-columns: 1fr; }
+      .terms-sidebar { position: static; }
+      .term-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+<header>
+  <button class="nav-btn" id="navBtn" aria-label="メニューを開く"><span></span><span></span><span></span></button>
+  <a href="index.html" class="site-logo">Otoano</a>
+  <span class="header-page-label">奏法・機材解説</span>
+  <div style="flex:1"></div>
+</header>
+
+<div class="terms-wrap">
+
+  <!-- ===== Sidebar ===== -->
+  <aside class="terms-sidebar">
+    <div class="search-box">
+      <input type="text" id="termsSearch" placeholder="キーワードで検索..." autocomplete="off" />
+    </div>
+    <div class="result-count" id="resultCount" style="display:none;"></div>
+    <div id="sidebarNav"></div>
+    <div class="vocab-note">
+      この辞典の項目は、アノテーション投稿エディターで選べる<strong>統制語彙</strong>（<code>vocab.ttl</code>）と同じものです。
+      語彙を1か所直せば、投稿・プレイヤー・この辞典のすべてに反映されます。
+    </div>
+  </aside>
+
+  <!-- ===== Main Content ===== -->
+  <div class="terms-content">
+    <div class="no-results" id="noResults">
+      <div class="nr-icon">◎</div>
+      <p>一致する用語が見つかりませんでした。</p>
+    </div>
+    <div id="termsRoot"></div>
+  </div>
+</div>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-col"><h4>Otoano</h4><p>音作りや機材を参考に誰でもコピーができる体験や、熟練者のノウハウ共有、奏者の交流を目指す楽器演奏者のためのプラットフォームです。</p></div>
+      <div class="footer-col"><h4>コンテンツ</h4><ul class="footer-links"><li><a href="search.html">横断検索</a></li><li><a href="guide.html">エレキギター初心者ガイド</a></li><li><a href="band-guide.html">バンド活動ガイド</a></li><li><a href="terms.html">奏法・機材解説</a></li><li><a href="usage-guide.html">サイト利用ガイド</a></li><li><a href="upload.html">アノテーション投稿エディター</a></li></ul></div>
+      <div class="footer-col"><h4>サポート</h4><ul class="footer-links"><li><a href="#">このサイトについて</a></li><li><a href="#">利用規約</a></li><li><a href="#">プライバシーポリシー</a></li></ul></div>
+      <div class="footer-col"><h4>SNS</h4><ul class="footer-links"><li><a href="#">Twitter (X)</a></li><li><a href="#">Instagram</a></li><li><a href="#">YouTube</a></li></ul></div>
+    </div>
+    <div style="text-align:center;color:var(--muted);font-size:12px;border-top:1px solid var(--line);padding-top:40px;">&copy; 2026 Otoano Development. All rights reserved.</div>
+  </div>
+</footer>
+
+<div class="nav-overlay" id="navOverlay"></div>
+<nav class="nav-panel" id="navPanel">
+  <div class="nav-panel-head"><a href="index.html" class="nav-panel-logo">Otoano</a><button class="nav-panel-close" id="navClose">✕</button></div>
+  <div class="nav-panel-section"><div class="nav-panel-label">メイン</div><a href="index.html">ホーム</a><a href="search.html">横断検索</a><a href="upload.html">アノテーション投稿</a></div>
+  <div class="nav-panel-section"><div class="nav-panel-label">ガイド</div><a href="usage-guide.html">サイト利用ガイド</a><a href="guide.html">エレキギター初心者ガイド</a><a href="band-guide.html">バンド活動ガイド</a></div>
+  <div class="nav-panel-section"><div class="nav-panel-label">辞書</div><a href="terms.html" class="nav-current">奏法・機材解説</a></div>
+  <div class="nav-panel-section"><div class="nav-panel-label">ユーザー情報</div><a href="account.html" class="nav-mypage-link">アカウント</a><a href="history.html" class="nav-mypage-link">プレイ履歴</a><a href="posts.html" class="nav-mypage-link">投稿管理</a></div>
+</nav>
+
+<script src="vocab.js"></script>
+<script>
+/* ============================================================
+   奏法・機材解説（辞典）
+   カードは統制語彙 vocab.js（＝vocab.ttl と1対1）から生成する。
+   語彙を増やせばこのページにも自動で載るため、投稿エディターとずれない。
+   ============================================================ */
+
+/* 旧アンカー（script.js の用語リンク等）を新しい語彙idへつなぐ */
+const ANCHOR_ALIASES = { 'mute': 'bridge-mute', 'overdrive': 'fx-overdrive', 'shield': 'cable' };
+
+/* 機材カテゴリ1つぶんのセクションを作る。
+   下位が2段（エフェクター等）なら系統ごとに、1段（ギター等）なら一覧で並べる。 */
+function gearSection(topId, title) {
+  const kids = otoanoGearChildren(topId);
+  const twoLevel = kids.some(k => otoanoGearChildren(k.id).length > 0);
+  const groups = twoLevel
+    ? kids.map(k => ({ id: k.id, label: k.label, lead: k.desc, items: otoanoGearChildren(k.id) }))
+    : [{ id: topId + '-list', label: null, items: kids }];
+  return { id: topId + '-type', title: title, icon: '◎', kind: 'equipment', badge: '機材', groups: groups };
+}
+
+/* ---- セクション定義 ---- */
+function buildSections() {
+  const gearBasics = OTOANO_GEAR_CATEGORIES.filter(c => c.desc);
+  return [
+    { id: 'technique', title: '奏法解説', icon: '♩', kind: 'technique', badge: '奏法',
+      groups: OTOANO_TECH_GROUPS.map(g => ({
+        id: 'tg-' + g.id, label: g.label,
+        // glossary:false（その他の受け皿）は辞典に載せない
+        items: OTOANO_TECHNIQUES.filter(t => t.group === g.id && t.glossary !== false)
+      })) },
+    { id: 'gear-basic', title: '機材の基本', icon: '◎', kind: 'equipment', badge: '機材',
+      groups: [{ id: 'gear-basic-list', label: null, items: gearBasics }] },
+    gearSection('guitar',   'ギターの種類'),
+    gearSection('amp',      'アンプの種類'),
+    gearSection('effector', 'エフェクターの種類'),
+    gearSection('strings',  '弦の種類'),
+    gearSection('pick',     'ピックの種類')
+  ];
+}
+
+const esc = (s) => String(s == null ? '' : s)
+  .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
+/* 機材の下位分類なら「エフェクター / 歪み系」の経路タグを先頭に付ける */
+function pathTagHtml(item) {
+  if (typeof otoanoGearCatPath !== 'function') return '';
+  const isGear = OTOANO_GEAR_SUBTYPES.some(s => s.id === item.id);
+  if (!isGear) return '';
+  const p = otoanoGearCatPath(item.id);
+  if (p.length < 2) return '';
+  return `<span class="term-tag is-path">${esc(p.slice(0, -1).join(' / '))}</span>`;
+}
+
+/* 外部リンクは飛び先が分かるよう、出典名（ギター博士 / Wikipedia）をそのままラベルにする */
+function linksHtml(item) {
+  const ls = item.links && item.links.length
+    ? item.links
+    : (item.url ? [{ u: item.url, s: '外部リンク' }] : []);
+  if (!ls.length) return '';
+  return `<div class="term-links"><span class="term-links-label">外部リンク</span>${
+    ls.map(l => `<a href="${esc(l.u)}" class="term-link" target="_blank" rel="noopener">${esc(l.s)} ↗</a>`).join('')
+  }</div>`;
+}
+
+function cardHtml(item, section) {
+  const aliasIds = Object.keys(ANCHOR_ALIASES).filter(a => ANCHOR_ALIASES[a] === item.id);
+  const alias = aliasIds.map(a => `<span class="anchor-alias" id="${a}"></span>`).join('');
+  const tags = (item.tags || []).map(t => `<span class="term-tag">${esc(t)}</span>`).join('');
+  return `${alias}<div class="term-card" id="${esc(item.id)}">
+    <div class="term-card-head">
+      <h3 class="term-name">${esc(item.label)}</h3>
+      <span class="term-badge badge-${section.kind}">${esc(section.badge)}</span>
+    </div>
+    <div class="term-divider"></div>
+    <div class="term-card-body">
+      <p class="term-desc">${esc(item.desc)}</p>
+      <div class="term-tags">${pathTagHtml(item)}${tags}</div>
+      ${linksHtml(item)}
+    </div>
+  </div>`;
+}
+
+function render() {
+  const sections = buildSections();
+  const root = document.getElementById('termsRoot');
+  const nav  = document.getElementById('sidebarNav');
+
+  root.innerHTML = sections.map(sec => {
+    const count = sec.groups.reduce((n, g) => n + g.items.length, 0);
+    const groups = sec.groups.map(g => {
+      if (!g.items.length) return '';
+      const head = g.label
+        ? `<div class="group-head"><h3 class="group-title">${esc(g.label)}</h3><span class="group-count">${g.items.length}項目</span></div>`
+        : '';
+      const lead = g.lead ? `<p class="group-lead">${esc(g.lead)}</p>` : '';
+      return `<div class="term-group" id="grp-${esc(g.id)}">${head}${lead}
+        <div class="term-grid">${g.items.map(it => cardHtml(it, sec)).join('')}</div>
+      </div>`;
+    }).join('');
+    return `<section id="${esc(sec.id)}" class="term-section">
+      <div class="section-header">
+        <div class="section-icon icon-${sec.kind}">${sec.icon}</div>
+        <h2>${esc(sec.title)}</h2>
+        <span class="section-count">${count}項目</span>
+      </div>
+      ${groups}
+    </section>`;
+  }).join('');
+
+  /* サイドバー：セクション見出し＋グループへのリンク */
+  nav.innerHTML = sections.map(sec => {
+    const links = sec.groups.filter(g => g.items.length).map(g => {
+      const label = g.label || sec.title;
+      return `<a href="#grp-${esc(g.id)}" class="sidebar-link"><span class="sidebar-dot"></span>${esc(label)}<span class="sidebar-count">${g.items.length}</span></a>`;
+    }).join('');
+    return `<div class="sidebar-section"><div class="sidebar-section-label">${esc(sec.title)}</div>${links}</div>`;
+  }).join('');
+}
+
+render();
+
+/* ----- Scroll spy（グループ単位） ----- */
+const sideLinks = document.querySelectorAll('.sidebar-link');
+const spy = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const href = '#' + entry.target.id;
+      sideLinks.forEach(l => l.classList.toggle('active', l.getAttribute('href') === href));
+    }
+  });
+}, { rootMargin: '-10% 0px -75% 0px' });
+document.querySelectorAll('.term-group').forEach(g => spy.observe(g));
+
+/* Smooth scroll */
+sideLinks.forEach(link => {
+  link.addEventListener('click', e => {
+    e.preventDefault();
+    const target = document.getElementById(link.getAttribute('href').slice(1));
+    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+});
+
+/* URLのハッシュ（terms.html#choking など）へ移動 */
+if (location.hash) {
+  const t = document.getElementById(decodeURIComponent(location.hash.slice(1)));
+  if (t) setTimeout(() => t.scrollIntoView({ block: 'center' }), 0);
+}
+
+/* ----- Search ----- */
+const searchInput = document.getElementById('termsSearch');
+const noResults   = document.getElementById('noResults');
+const resultCount = document.getElementById('resultCount');
+
+searchInput.addEventListener('input', () => {
+  const q = searchInput.value.toLowerCase().trim();
+  let total = 0;
+
+  document.querySelectorAll('.term-section').forEach(section => {
+    let secVis = 0;
+    section.querySelectorAll('.term-group').forEach(group => {
+      let vis = 0;
+      group.querySelectorAll('.term-card').forEach(card => {
+        const match = !q || card.textContent.toLowerCase().includes(q);
+        card.style.display = match ? '' : 'none';
+        if (match) { vis++; total++; }
+      });
+      group.style.display = vis > 0 ? '' : 'none';
+      secVis += vis;
+    });
+    section.style.display = secVis > 0 ? '' : 'none';
+  });
+
+  noResults.style.display = total === 0 ? 'block' : 'none';
+  resultCount.style.display = q ? 'block' : 'none';
+  resultCount.textContent = total + '件ヒット';
+});
+
+/* ----- Nav panel ----- */
+(function(){
+  var btn=document.getElementById('navBtn'),ov=document.getElementById('navOverlay'),pn=document.getElementById('navPanel'),cl=document.getElementById('navClose');
+  function open(){ov.classList.add('open');pn.classList.add('open');}
+  function close(){ov.classList.remove('open');pn.classList.remove('open');}
+  if(btn)btn.addEventListener('click',open);
+  if(cl)cl.addEventListener('click',close);
+  if(ov)ov.addEventListener('click',close);
+})();
+</script>
+</body>
+</html>

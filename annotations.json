@@ -1,0 +1,520 @@
+{
+  "@context": "context.jsonld",
+  "@id": "annotations/ashitamo-guitar",
+  "@type": "otoano:PerformanceAnnotation",
+  "version": 1,
+  "title": "明日も / SHISHAMO",
+  "artist": "SHISHAMO",
+  "part": "guitar",
+  "creator": "森本理希",
+  "created": "2026-07-21",
+  "modified": "2026-07-23",
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "sameAs": [
+    "https://musicbrainz.org/recording/037a3fb3-c441-4a42-9e10-51ff011201d2"
+  ],
+  "videoId": "zhCtzmDWsN0",
+  "usesGear": [
+    "https://www.boss.info/jp/products/gt-1/",
+    "http://provisionguitar.com/?p=791",
+    "https://jp.fender.com/products/59-bassman-ltd",
+    "https://www.boss.info/jp/products/bd-2/",
+    "https://www.boss.info/jp/products/od-3/",
+    "https://www.providence.jp/products/cable/cable_03.html",
+    "https://www.soundhouse.co.jp/products/detail/item/258516/",
+    "https://www.ernieball.com/guitar-accessories/guitar-straps/polypro-guitar-straps",
+    "https://www.ernieball.com/guitar-strings/electric-guitar-strings/slinky-rps-nickel-wound-electric-guitar-strings"
+  ],
+  "gearInfo": [
+    {
+      "type": "gear",
+      "title": "BOSS GT-1 (実機)",
+      "gearCategory": "multi-effector",
+      "url": "https://www.boss.info/jp/products/gt-1/",
+      "src": "imgs/boss-gt1-photo.jpeg",
+      "note": "今回使用しているメインのマルチエフェクターです。"
+    },
+    {
+      "type": "gear",
+      "title": "使用ギター：Provision",
+      "gearCategory": "gt-strat",
+      "url": "http://provisionguitar.com/?p=791",
+      "note": "宮崎朝子シグネチャーモデル"
+    },
+    {
+      "type": "gear",
+      "title": "アンプ：Fender '59 Bassman",
+      "gearCategory": "amp",
+      "url": "https://jp.fender.com/products/59-bassman-ltd",
+      "note": "メインのアンプ設定"
+    },
+    {
+      "type": "gear",
+      "title": "エフェクター：BOSS BD-2",
+      "gearCategory": "fx-overdrive",
+      "url": "https://www.boss.info/jp/products/bd-2/",
+      "note": "定番のブルースドライバー"
+    },
+    {
+      "type": "gear",
+      "title": "エフェクター：BOSS OD-3",
+      "gearCategory": "fx-overdrive",
+      "url": "https://www.boss.info/jp/products/od-3/",
+      "note": "メインのオーバードライブ"
+    },
+    {
+      "type": "gear",
+      "title": "シールド：Providence",
+      "gearCategory": "cable",
+      "url": "https://www.providence.jp/products/cable/cable_03.html"
+    },
+    {
+      "type": "gear",
+      "title": "ピック：MASTER 8 JAPAN",
+      "gearCategory": "pick",
+      "url": "https://www.soundhouse.co.jp/products/detail/item/258516/"
+    },
+    {
+      "type": "gear",
+      "title": "ストラップ：Ernie Ball",
+      "gearCategory": "other",
+      "url": "https://www.ernieball.com/guitar-accessories/guitar-straps/polypro-guitar-straps"
+    },
+    {
+      "type": "gear",
+      "title": "弦：Ernie Ball RPS Slinky",
+      "gearCategory": "strings",
+      "url": "https://www.ernieball.com/guitar-strings/electric-guitar-strings/slinky-rps-nickel-wound-electric-guitar-strings"
+    },
+    {
+      "type": "gear",
+      "title": "常時ON：コンプレッサー設定",
+      "gearCategory": "fx-compressor",
+      "src": "imgs/comp-1.jpeg",
+      "note": "音の粒立ちを揃えるための設定です。"
+    },
+    {
+      "type": "gear",
+      "title": "常時ON：イコライザー(EQ)設定",
+      "gearCategory": "fx-eq",
+      "src": "imgs/eq-1.jpeg",
+      "note": "不要な低域をカットし、抜けを良くしています。"
+    },
+    {
+      "type": "gear",
+      "title": "常時ON：リバーブ設定",
+      "gearCategory": "fx-reverb",
+      "src": "imgs/reverb-1.jpeg",
+      "note": "薄くかけて空気感を出しています。"
+    },
+    {
+      "type": "gear",
+      "title": "常時ON：ノイズサプレッサー",
+      "gearCategory": "fx-noise-gate",
+      "src": "imgs/noise-suppressor.jpeg",
+      "note": "ハイゲイン時のノイズ対策です。"
+    }
+  ],
+  "knowledgeInfo": [
+    {
+      "type": "term",
+      "title": "カッティング",
+      "termCategory": "technique",
+      "aboutTechnique": "cutting",
+      "text": "基本のカッティング解説",
+      "url": "https://guitar-hakase.com/2735/"
+    },
+    {
+      "type": "term",
+      "title": "ブリッジミュート",
+      "termCategory": "technique",
+      "aboutTechnique": "bridge-mute",
+      "text": "ズンズンという響きを出す技法",
+      "url": "https://guitar-hakase.com/2766/"
+    },
+    {
+      "type": "term",
+      "title": "ストローク",
+      "termCategory": "technique",
+      "aboutTechnique": "stroke",
+      "text": "右手の振り方の基本",
+      "url": "https://guitar-hakase.com/2774/"
+    },
+    {
+      "type": "term",
+      "title": "チョーキング",
+      "termCategory": "technique",
+      "aboutTechnique": "choking",
+      "text": "音程を滑らかに上げる技法",
+      "url": "terms.html#choking"
+    },
+    {
+      "type": "term",
+      "title": "コードチェンジ",
+      "termCategory": "technique",
+      "aboutTechnique": "chord-change",
+      "text": "スムーズなコード移動のコツ",
+      "url": "https://guitar-hakase.com/2403/"
+    },
+    {
+      "type": "term",
+      "title": "バレーコード",
+      "termCategory": "technique",
+      "aboutTechnique": "barre-chord",
+      "text": "Fコードなどの押さえ方",
+      "url": "https://guitar-hakase.com/5639/"
+    },
+    {
+      "type": "term",
+      "title": "アンプとは",
+      "termCategory": "equipment",
+      "text": "ギターの信号を増幅して音を出す装置。",
+      "url": "https://ja.wikipedia.org/wiki/%E3%82%AE%E3%82%BF%E3%83%BC%E3%82%A2%E3%83%B3%E3%83%97"
+    },
+    {
+      "type": "term",
+      "title": "エフェクターとは",
+      "termCategory": "equipment",
+      "text": "音色を加工する機材。歪み・空間系などがある。",
+      "url": "https://ja.wikipedia.org/wiki/%E3%82%A8%E3%83%B4%E3%82%A7%E3%82%AF%E3%82%BF%E3%83%BC_(%E9%9F%B3%E9%9F%BF%E6%A9%9F%E5%99%A8)"
+    },
+    {
+      "type": "term",
+      "title": "TAB譜の読み方",
+      "termCategory": "theory",
+      "text": "ギター専用譜面の読み方",
+      "url": "https://guitar-hakase.com/renshu/tab/"
+    }
+  ],
+  "categories": [
+    {
+      "id": "all",
+      "label": "すべて"
+    },
+    {
+      "id": "technique",
+      "label": "奏法"
+    },
+    {
+      "id": "equipment",
+      "label": "機材設定"
+    },
+    {
+      "id": "other",
+      "label": "その他"
+    }
+  ],
+  "annotations": [
+    {
+      "id": "base-equipment",
+      "categories": [
+        "equipment"
+      ],
+      "start": 0,
+      "end": 372,
+      "title": "基本機材設定",
+      "description": "全体の基本となるエフェクター・アンプ設定です。",
+      "usesGear": [
+        "https://jp.fender.com/products/59-bassman-ltd"
+      ],
+      "items": [
+        {
+          "type": "gear",
+          "title": "アンプ基本設定（Fender '59 Bassman）",
+          "gearCategory": "amp",
+          "url": "https://jp.fender.com/products/59-bassman-ltd",
+          "settings": [
+            {
+              "param": "gain",
+              "name": "GAIN",
+              "value": "3",
+              "unit": "0-12"
+            },
+            {
+              "param": "treble",
+              "name": "TREBLE",
+              "value": "6",
+              "unit": "0-12"
+            },
+            {
+              "param": "middle",
+              "name": "MIDDLE",
+              "value": "5",
+              "unit": "0-12"
+            },
+            {
+              "param": "bass",
+              "name": "BASS",
+              "value": "4",
+              "unit": "0-12"
+            },
+            {
+              "param": "presence",
+              "name": "PRESENCE",
+              "value": "5",
+              "unit": "0-12"
+            }
+          ],
+          "note": "Bassmanをベースにしたクリーン〜クランチ設定です。"
+        },
+        {
+          "type": "gear",
+          "title": "コンプレッサー(基本)",
+          "gearCategory": "fx-compressor",
+          "src": "imgs/comp-1.jpeg",
+          "note": "音の粒立ちを揃える基本設定。"
+        },
+        {
+          "type": "gear",
+          "title": "コンプレッサー(中域強調)",
+          "gearCategory": "fx-compressor",
+          "src": "imgs/comp-2.jpeg",
+          "note": "Aメロのミュートをはっきりさせる設定。"
+        },
+        {
+          "type": "gear",
+          "title": "イコライザー(基本)",
+          "gearCategory": "fx-eq",
+          "src": "imgs/eq-1.jpeg",
+          "note": "抜けを良くするための基本設定。"
+        },
+        {
+          "type": "gear",
+          "title": "イコライザー(カッティング用)",
+          "gearCategory": "fx-eq",
+          "src": "imgs/eq-2.jpeg",
+          "note": "イントロの歯切れの良さを出すための設定。"
+        },
+        {
+          "type": "gear",
+          "title": "オーバードライブ設定",
+          "gearCategory": "fx-overdrive",
+          "src": "imgs/od-ds-1.jpeg",
+          "note": "サビ用のメインの歪みです。"
+        },
+        {
+          "type": "gear",
+          "title": "マスターボリューム(Bメロ)",
+          "gearCategory": "multi-effector",
+          "src": "imgs/master-2.jpeg",
+          "note": "サビへの盛り上がり用。"
+        },
+        {
+          "type": "gear",
+          "title": "リバーブ(基本)",
+          "gearCategory": "fx-reverb",
+          "src": "imgs/reverb-1.jpeg",
+          "note": "空気感を出すための基本設定。"
+        },
+        {
+          "type": "gear",
+          "title": "ノイズサプレッサー",
+          "gearCategory": "fx-noise-gate",
+          "src": "imgs/noise-suppressor.jpeg",
+          "note": "ノイズ対策の設定。"
+        }
+      ]
+    },
+    {
+      "id": "intro",
+      "categories": [
+        "technique",
+        "equipment",
+        "other"
+      ],
+      "techniques": [
+        "cutting",
+        "brushing",
+        "other-technique"
+      ],
+      "start": 0,
+      "end": 32,
+      "title": "イントロ",
+      "description": "軽快なブラッシングを混ぜたカッティングが特徴。右手の振りをメトロノームのように一定に保ちましょう。",
+      "items": [
+        {
+          "type": "group",
+          "title": "カッティング",
+          "aboutTechnique": "cutting",
+          "items": [
+            {
+              "type": "link",
+              "title": "奏法解説：カッティング",
+              "url": "https://guitar-hakase.com/2735/",
+              "aboutTechnique": "cutting"
+            }
+          ]
+        },
+        {
+          "type": "group",
+          "title": "ブラッシング",
+          "aboutTechnique": "brushing",
+          "items": []
+        },
+        {
+          "type": "group",
+          "title": "この区間の資料",
+          "aboutTechnique": "other-technique",
+          "items": [
+            {
+              "type": "link",
+              "title": "TAB譜で確認",
+              "url": "https://easy-guitar-net.com/ashitamo-shishamo/",
+              "aboutTechnique": "other-technique"
+            }
+          ]
+        },
+        {
+          "type": "gear",
+          "title": "イコライザー(カッティング用)",
+          "gearCategory": "fx-eq",
+          "src": "imgs/eq-2.jpeg",
+          "note": "イントロの歯切れの良さを出すための設定。"
+        }
+      ]
+    },
+    {
+      "id": "verse1",
+      "categories": [
+        "technique",
+        "equipment"
+      ],
+      "techniques": [
+        "bridge-mute"
+      ],
+      "start": 32,
+      "end": 64,
+      "title": "Aメロ",
+      "description": "低音弦を中心にブリッジミュートを効かせて、タイトに演奏します。音量は控えめに。",
+      "items": [
+        {
+          "type": "group",
+          "title": "ブリッジミュート",
+          "aboutTechnique": "bridge-mute",
+          "items": [
+            {
+              "type": "link",
+              "title": "奏法解説：ブリッジミュート",
+              "url": "https://guitar-hakase.com/2766/",
+              "aboutTechnique": "bridge-mute"
+            },
+            {
+              "type": "text",
+              "title": "ピッキングのコツ",
+              "text": "右手の付け根をブリッジに軽く乗せ、『ズンズン』という響きを意識しましょう。",
+              "aboutTechnique": "bridge-mute"
+            }
+          ]
+        },
+        {
+          "type": "gear",
+          "title": "コンプレッサー(中域強調)",
+          "gearCategory": "fx-compressor",
+          "src": "imgs/comp-2.jpeg",
+          "note": "Aメロのミュートをはっきりさせる設定。"
+        }
+      ]
+    },
+    {
+      "id": "pre-chorus",
+      "categories": [
+        "technique",
+        "equipment"
+      ],
+      "techniques": [
+        "stroke"
+      ],
+      "start": 64,
+      "end": 94,
+      "title": "Bメロ",
+      "description": "サビに向けて徐々に音量を上げ、勢いをつけていきます。後半はミュートを外します。",
+      "usesGear": [
+        "https://www.boss.info/jp/products/bd-2/"
+      ],
+      "items": [
+        {
+          "type": "group",
+          "title": "ストローク",
+          "aboutTechnique": "stroke",
+          "items": [
+            {
+              "type": "link",
+              "title": "奏法解説：ストローク",
+              "url": "https://guitar-hakase.com/2774/",
+              "aboutTechnique": "stroke"
+            }
+          ]
+        },
+        {
+          "type": "gear",
+          "title": "BOSS BD-2（サビ直前でON）",
+          "gearCategory": "fx-overdrive",
+          "url": "https://www.boss.info/jp/products/bd-2/",
+          "note": "サビ直前でONにします。歪みの主役はこのペダルです。"
+        },
+        {
+          "type": "gear",
+          "title": "マスターボリューム(Bメロ)",
+          "gearCategory": "multi-effector",
+          "src": "imgs/master-2.jpeg",
+          "note": "サビへの盛り上がり用。"
+        }
+      ]
+    },
+    {
+      "id": "chorus1",
+      "categories": [
+        "technique",
+        "equipment"
+      ],
+      "techniques": [
+        "stroke",
+        "chord-change"
+      ],
+      "start": 94,
+      "end": 136,
+      "title": "サビ",
+      "description": "力強いストロークで演奏します。ここで一気にエフェクターを切り替えて歪ませます。",
+      "items": [
+        {
+          "type": "group",
+          "title": "ストローク",
+          "aboutTechnique": "stroke",
+          "items": []
+        },
+        {
+          "type": "group",
+          "title": "コードチェンジ",
+          "aboutTechnique": "chord-change",
+          "items": [
+            {
+              "type": "link",
+              "title": "奏法解説：コードチェンジ",
+              "url": "https://guitar-hakase.com/2403/",
+              "aboutTechnique": "chord-change"
+            }
+          ]
+        },
+        {
+          "type": "gear",
+          "title": "★エフェクター切り替え",
+          "gearCategory": "multi-effector",
+          "src": "imgs/effector-switch.jpeg",
+          "note": "サビに入る瞬間にこのスイッチを踏みます！"
+        },
+        {
+          "type": "gear",
+          "title": "オーバードライブ設定",
+          "gearCategory": "fx-overdrive",
+          "src": "imgs/od-ds-1.jpeg",
+          "note": "サビ用のメインの歪みです。"
+        }
+      ]
+    }
+  ],
+  "genre": [
+    "genre-jpop",
+    "genre-rock"
+  ],
+  "difficulty": "diff-intermediate"
+}

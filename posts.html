@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>投稿管理 - Otoano</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .posts-wrap { max-width: 960px; margin: 40px auto; padding: 0 20px 80px; display: grid; gap: 24px; }
+
+    .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+    .stat-card { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 18px 20px; }
+    .stat-card .label { font-size: 11px; color: var(--muted); margin-bottom: 6px; font-weight: 600; letter-spacing: 0.04em; }
+    .stat-card .value { font-size: 26px; font-weight: 800; color: var(--accent); line-height: 1; }
+    .stat-card .sub { font-size: 11px; color: var(--muted); margin-top: 4px; }
+
+    .posts-card { background: var(--panel); border: 1px solid var(--line); border-radius: 20px; overflow: hidden; }
+    .posts-card-head { padding: 16px 24px; border-bottom: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; }
+    .posts-card-head h2 { margin: 0; font-size: 14px; color: #fff; font-weight: 700; }
+
+    .post-item { display: flex; align-items: center; gap: 20px; padding: 16px 24px; border-bottom: 1px solid var(--line); transition: background 0.15s; }
+    .post-item:last-child { border-bottom: none; }
+    .post-item:hover { background: rgba(255,255,255,0.02); }
+
+    .post-thumb { width: 96px; height: 54px; border-radius: 8px; background: #000; object-fit: cover; flex-shrink: 0; border: 1px solid var(--line); }
+    .post-thumb-placeholder { width: 96px; height: 54px; border-radius: 8px; background: var(--bg); border: 1px solid var(--line); flex-shrink: 0; display: flex; align-items: center; justify-content: center; color: var(--muted); font-size: 20px; }
+
+    .post-info { flex: 1; min-width: 0; }
+    .post-title { font-size: 14px; font-weight: 700; color: #fff; margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .post-meta { font-size: 12px; color: var(--muted); display: flex; gap: 14px; flex-wrap: wrap; }
+
+    .post-stats { display: flex; gap: 20px; flex-shrink: 0; text-align: center; }
+    .post-stat { }
+    .post-stat .n { font-size: 15px; font-weight: 700; color: #fff; }
+    .post-stat .l { font-size: 10px; color: var(--muted); margin-top: 2px; }
+
+    .status-badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 10px; border-radius: 99px; font-size: 11px; font-weight: 700; flex-shrink: 0; }
+    .status-public { background: rgba(94,162,255,0.15); color: var(--accent); border: 1px solid rgba(94,162,255,0.3); }
+    .status-draft { background: rgba(154,163,178,0.12); color: var(--muted); border: 1px solid var(--line); }
+    .status-dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+
+    .post-actions { display: flex; gap: 8px; flex-shrink: 0; }
+    .btn-icon { background: transparent; border: 1px solid var(--line); border-radius: 8px; color: var(--muted); padding: 6px 12px; font-size: 12px; cursor: pointer; transition: all 0.15s; }
+    .btn-icon:hover { border-color: var(--accent); color: var(--accent); }
+    .btn-icon.del:hover { border-color: #ff6b6b; color: #ff6b6b; }
+
+    .new-post-btn { display: flex; align-items: center; justify-content: center; gap: 8px; padding: 14px 24px; border: 1px dashed var(--line); border-radius: 12px; color: var(--muted); font-size: 14px; cursor: pointer; background: transparent; width: 100%; transition: all 0.2s; }
+    .new-post-btn:hover { border-color: var(--accent); color: var(--accent); background: rgba(94,162,255,0.04); }
+
+    @media (max-width: 700px) {
+      .stats-row { grid-template-columns: 1fr 1fr; }
+      .post-stats { display: none; }
+      .post-thumb, .post-thumb-placeholder { width: 64px; height: 36px; }
+    }
+  </style>
+</head>
+<body>
+<header>
+  <button class="nav-btn" id="navBtn" aria-label="メニューを開く"><span></span><span></span><span></span></button>
+  <a href="index.html" class="site-logo">Otoano</a>
+  <span class="header-page-label">投稿管理</span>
+  <div style="flex:1"></div>
+  <a href="upload.html" class="btn-primary" style="font-size:13px; padding:8px 16px;">+ 新規投稿</a>
+</header>
+
+<div class="posts-wrap">
+
+  <!-- サマリー -->
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="label">総投稿数</div>
+      <div class="value">3</div>
+      <div class="sub">公開中 1 / 下書き 2</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">総閲覧数</div>
+      <div class="value">142</div>
+      <div class="sub">今月 +38</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">平均評価</div>
+      <div class="value">4.8</div>
+      <div class="sub">24件の評価</div>
+    </div>
+    <div class="stat-card">
+      <div class="label">総評価数</div>
+      <div class="value">24</div>
+      <div class="sub">今月 +7</div>
+    </div>
+  </div>
+
+  <!-- 投稿一覧 -->
+  <div class="posts-card">
+    <div class="posts-card-head">
+      <h2>投稿一覧</h2>
+      <span style="font-size:12px; color:var(--muted);">3件</span>
+    </div>
+
+    <!-- 公開中 -->
+    <div class="post-item">
+      <img class="post-thumb" src="imgs/ashita-mo-cover.jpg" alt="" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
+      <div class="post-thumb-placeholder" style="display:none;">♪</div>
+      <div class="post-info">
+        <div class="post-title">明日も / SHISHAMO</div>
+        <div class="post-meta">
+          <span>投稿日：2026-05-12</span>
+          <span>セグメント 4件</span>
+          <span>機材：マルチエフェクター</span>
+        </div>
+      </div>
+      <div class="post-stats">
+        <div class="post-stat">
+          <div class="n">142</div>
+          <div class="l">閲覧</div>
+        </div>
+        <div class="post-stat">
+          <div class="n">★ 4.8</div>
+          <div class="l">評価</div>
+        </div>
+        <div class="post-stat">
+          <div class="n">24</div>
+          <div class="l">口コミ</div>
+        </div>
+      </div>
+      <div class="status-badge status-public"><span class="status-dot"></span>公開中</div>
+      <div class="post-actions">
+        <button class="btn-icon" onclick="location.href='upload.html'">編集</button>
+        <button class="btn-icon del" onclick="alert('削除しました')">削除</button>
+      </div>
+    </div>
+
+    <!-- 下書き1 -->
+    <div class="post-item">
+      <div class="post-thumb-placeholder">♪</div>
+      <div class="post-info">
+        <div class="post-title">ソラニン / ASIAN KUNG-FU GENERATION</div>
+        <div class="post-meta">
+          <span>最終編集：2026-05-20</span>
+          <span>セグメント 2件</span>
+          <span>機材：レスポールタイプ</span>
+        </div>
+      </div>
+      <div class="post-stats">
+        <div class="post-stat">
+          <div class="n">—</div>
+          <div class="l">閲覧</div>
+        </div>
+        <div class="post-stat">
+          <div class="n">—</div>
+          <div class="l">評価</div>
+        </div>
+        <div class="post-stat">
+          <div class="n">—</div>
+          <div class="l">口コミ</div>
+        </div>
+      </div>
+      <div class="status-badge status-draft"><span class="status-dot"></span>下書き</div>
+      <div class="post-actions">
+        <button class="btn-icon" onclick="location.href='upload.html'">編集</button>
+        <button class="btn-icon del" onclick="alert('削除しました')">削除</button>
+      </div>
+    </div>
+
+    <!-- 下書き2 -->
+    <div class="post-item">
+      <div class="post-thumb-placeholder">♪</div>
+      <div class="post-info">
+        <div class="post-title">白日 / King Gnu</div>
+        <div class="post-meta">
+          <span>最終編集：2026-05-28</span>
+          <span>セグメント 0件</span>
+          <span>作成中</span>
+        </div>
+      </div>
+      <div class="post-stats">
+        <div class="post-stat">
+          <div class="n">—</div>
+          <div class="l">閲覧</div>
+        </div>
+        <div class="post-stat">
+          <div class="n">—</div>
+          <div class="l">評価</div>
+        </div>
+        <div class="post-stat">
+          <div class="n">—</div>
+          <div class="l">口コミ</div>
+        </div>
+      </div>
+      <div class="status-badge status-draft"><span class="status-dot"></span>下書き</div>
+      <div class="post-actions">
+        <button class="btn-icon" onclick="location.href='upload.html'">編集</button>
+        <button class="btn-icon del" onclick="alert('削除しました')">削除</button>
+      </div>
+    </div>
+
+  </div>
+
+  <button class="new-post-btn" onclick="location.href='upload.html'">
+    + 新しいアノテーションを投稿する
+  </button>
+
+</div>
+
+<div class="nav-overlay" id="navOverlay"></div>
+<nav class="nav-panel" id="navPanel">
+  <div class="nav-panel-head">
+    <a href="index.html" class="nav-panel-logo">Otoano</a>
+    <button class="nav-panel-close" id="navClose">✕</button>
+  </div>
+  <div class="nav-panel-section">
+    <div class="nav-panel-label">メイン</div>
+    <a href="index.html">ホーム</a>
+    <a href="search.html">横断検索</a><a href="upload.html">アノテーション投稿</a>
+  </div>
+  <div class="nav-panel-section">
+    <div class="nav-panel-label">ガイド</div>
+    <a href="usage-guide.html">サイト利用ガイド</a>
+    <a href="guide.html">エレキギター初心者ガイド</a>
+    <a href="band-guide.html">バンド活動ガイド</a>
+  </div>
+  <div class="nav-panel-section">
+    <div class="nav-panel-label">辞書</div>
+    <a href="terms.html">奏法・機材解説</a>
+  </div>
+  <div class="nav-panel-section">
+    <div class="nav-panel-label">ユーザー情報</div>
+    <a href="account.html" class="nav-mypage-link">アカウント</a>
+    <a href="history.html" class="nav-mypage-link">プレイ履歴</a>
+    <a href="posts.html" class="nav-current">投稿管理</a>
+  </div>
+</nav>
+<script>
+(function(){
+  var btn=document.getElementById('navBtn'),ov=document.getElementById('navOverlay'),pn=document.getElementById('navPanel'),cl=document.getElementById('navClose');
+  function open(){ov.classList.add('open');pn.classList.add('open');}
+  function close(){ov.classList.remove('open');pn.classList.remove('open');}
+  if(btn)btn.addEventListener('click',open);
+  if(cl)cl.addEventListener('click',close);
+  if(ov)ov.addEventListener('click',close);
+})();
+</script>
+</body>
+</html>
