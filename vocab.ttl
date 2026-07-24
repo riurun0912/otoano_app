@@ -1,4 +1,4 @@
-@prefix otoano: <https://riurun2023.github.io/Otoano/vocab#> .
+@prefix otoano: <ttps://riurun0912.github.io/otoano_app/vocab#> .
 @prefix schema: <http://schema.org/> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix mo:     <http://purl.org/ontology/mo/> .
