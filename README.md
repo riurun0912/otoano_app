@@ -8,7 +8,7 @@ YouTube動画に連動したタイムスタンプ付きアノテーション（�
 
 ## 起動方法
 
-> **注意**: `file://`（htmlファイルの直開き）では、ブラウザのセキュリティ制限（CORS）により `songs.json` や `annotations.json` の `fetch()` 読み込みが失敗します。**必ずローカルWebサーバー経由で起動してください。**
+> **必ずローカルWebサーバー経由で起動してください。****注意**: `file://`（htmlファイルの直開き）では、ブラウザのセキュリティ制限（CORS）により `songs.json` や `annotations.json` の `fetch()` 読み込みが失敗します。
 起動の方法の例：ファイルをまとめてダウンロードし、任意のフォルダにまとめます。その後、ターミナルをフォルダ内で開き、「vite」と打ち込みます。その後生成されたURLを任意のWEBブラウザにコピペし開く。
 
 ---
@@ -203,14 +203,4 @@ annotations.json を実際に生成・ダウンロードできる機能エディ
 
 `usesGear` は投稿エディターが gear カードのURLから自動生成する（楽曲全体＋セグメント単位）。
 
-
-## 使用ライブラリ
-
-| ライブラリ | 用途 | 読み込みタイミング |
-|-----------|------|--------------------|
-| [YouTube IFrame API](https://developers.google.com/youtube/iframe_api_reference) | 動画埋め込み・再生制御 | 起動時（常時） |
-| [abcjs @6](https://www.abcjs.net/) | ABC記法によるコード進行の楽譜描画 | 遅延（chordアイテム使用時） |
-| [Tonal.js](https://github.com/tonaljs/tonal) | コード解析・音名変換・MIDI変換 | 遅延（chordアイテム使用時） |
-| [Verovio](https://www.verovio.org/) | MEI/MusicXML楽譜レンダリング＋MIDI変換 | 遅延（scoreアイテム使用時） |
-| [soundfont-player](https://github.com/danigb/soundfont-player) | MusyngKiteピアノ音源（高音質再生） | 遅延（chord/scoreアイテム使用時） |
 
