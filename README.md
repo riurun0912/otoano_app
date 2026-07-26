@@ -204,4 +204,4 @@ annotations.json を実際に生成・ダウンロードできる機能エディ
 `usesGear` は投稿エディターが gear カードのURLから自動生成する（楽曲全体＋セグメント単位）。
 
 
-Copyright (c) 2026 [Morimoto Riki], Licensed under CC BY-NC-SA 4.0
+Copyright (c) 2026. Morimoto Riki. Licensed under CC BY-NC-SA 4.0
