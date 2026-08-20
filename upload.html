@@ -250,8 +250,8 @@
           <textarea id="comment" placeholder="例：マルチエフェクター一個で再現しました！"></textarea>
         </div>
         <div class="field">
-          <label>MusicBrainz の録音URL（任意・録音の同定 owl:sameAs）</label>
-          <input type="url" id="sameAsInput" placeholder="例：https://musicbrainz.org/recording/037a3fb3-..." />
+          <label>MusicBrainz の録音URL（任意・どの録音についてかを示す schema:about）</label>
+          <input type="url" id="aboutInput" placeholder="例：https://musicbrainz.org/recording/037a3fb3-..." />
           <div style="font-size:11px; color:var(--muted); line-height:1.7; margin-top:4px;">
             同名異曲やアレンジと区別するため、その録音を一意に指す
             <a href="https://musicbrainz.org/" target="_blank" rel="noopener" style="color:var(--accent);">MusicBrainz</a>
@@ -1407,13 +1407,13 @@ function setSelectedGenres(ids) {
   Array.from(gsel.options).forEach(o => { o.selected = set.has(o.value); });
 }
 
-/* 録音の同定（owl:sameAs）＝ MusicBrainz の録音URL。入力欄を正とする */
-function getSameAs() {
-  const v = ((document.getElementById('sameAsInput') || {}).value || '').trim();
+/* この演奏がどの録音についての記述か（schema:about）＝ MusicBrainz の録音URL。入力欄を正とする */
+function getAbout() {
+  const v = ((document.getElementById('aboutInput') || {}).value || '').trim();
   return v ? [v] : [];
 }
-function setSameAs(arr) {
-  const el = document.getElementById('sameAsInput');
+function setAbout(arr) {
+  const el = document.getElementById('aboutInput');
   if (el) el.value = (Array.isArray(arr) && arr.length) ? arr[0] : '';
 }
 
@@ -1439,9 +1439,9 @@ function buildJSON() {
   if (genres.length) facets.genre = genres;
   const diff = (document.getElementById('difficultySelect') || {}).value;
   if (diff) facets.difficulty = diff;
-  // 録音の同定（owl:sameAs）：MusicBrainz の録音URL（入力欄の値）
-  const sameAsList = getSameAs();
-  if (sameAsList.length) facets.sameAs = sameAsList;
+  // この演奏がどの録音についてか（schema:about）：MusicBrainz の録音URL（入力欄の値）
+  const aboutList = getAbout();
+  if (aboutList.length) facets.about = aboutList;
   // 引き継ぎ編集で作られたものは、原典を schema:isBasedOn で指す
   if (state.isBasedOn) facets.isBasedOn = state.isBasedOn;
   const comment = document.getElementById('comment').value.trim();
@@ -1532,7 +1532,7 @@ document.getElementById('saveBtn').addEventListener('click', () => {
     comment: document.getElementById('comment').value,
     segments: state.segments,
     gearInfo: state.gearInfo,
-    sameAs: getSameAs(),
+    about: getAbout(),
     docId: state.docId,
     isBasedOn: state.isBasedOn,
     forkedFrom: state.forkedFrom,
@@ -1562,7 +1562,7 @@ document.getElementById('saveBtn').addEventListener('click', () => {
     state.created      = es.created || data.created || '';
     state.segments     = es.segments     || [];
     state.gearInfo     = es.gearInfo     || [];
-    setSameAs(es.sameAs);
+    setAbout(es.about || es.sameAs);
     state.docId        = es.docId        || '';
     state.isBasedOn    = es.isBasedOn    || '';
     state.forkedFrom   = es.forkedFrom   || null;
@@ -1623,8 +1623,8 @@ function applyLoadedJSON(data, opts) {
       };
       state.gearInfo      = data.gearInfo ? flatten(data.gearInfo) : legacyGear;
       state.knowledgeInfo = flatten(data.knowledgeInfo);
-      // 録音の同定（owl:sameAs）＝MusicBrainz URL を入力欄に復元（引き継ぎでも同じ録音なので保持）
-      setSameAs(data.sameAs);
+      // どの録音についてか（schema:about）＝MusicBrainz URL を入力欄に復元（引き継ぎ・旧sameAsも読む）
+      setAbout(data.about || data.sameAs);
       if (opts.fork) {
         // 引き継ぎ: 別リソースとして採番し直し、原典への参照を残す
         state.docId = '';

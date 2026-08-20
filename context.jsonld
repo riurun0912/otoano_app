@@ -22,7 +22,7 @@
     "note": "schema:description",
     "text": "schema:text",
     "version": "schema:version",
-    "sameAs": { "@id": "owl:sameAs", "@type": "@id", "@container": "@set" },
+    "about": { "@id": "schema:about", "@type": "@id", "@container": "@set" },
 
     "creator":  "dcterms:creator",
     "created":  { "@id": "dcterms:created",  "@type": "xsd:date" },
