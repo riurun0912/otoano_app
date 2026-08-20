@@ -1,4 +1,4 @@
-@prefix otoano: <ttps://riurun0912.github.io/otoano_app/vocab#> .
+@prefix otoano: <https://riurun0912.github.io/otoano_app/vocab#> .
 @prefix schema: <http://schema.org/> .
 @prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix mo:     <http://purl.org/ontology/mo/> .
@@ -16,13 +16,12 @@
 # アプリの annotations.json は context.jsonld によって本語彙へ写像される。
 #################################################################
 
-<https://riurun2023.github.io/Otoano/vocab#>
+<https://riurun0912.github.io/otoano_app/vocab#>
     a owl:Ontology ;
     dcterms:title "Otoano Vocabulary"@ja ;
     dcterms:description "エレキギター演奏の実践知識（音作り・奏法・機材・時系列アノテーション）を記述する語彙。"@ja ;
     dcterms:creator "森本理希"@ja ;
-    dcterms:license <https://creativecommons.org/licenses/by/4.0/> ;
-    rdfs:seeAlso <https://riurun2023.github.io/Rockband_LOD/dataset.ttl> .
+    dcterms:license <https://creativecommons.org/licenses/by/4.0/> .
 
 #################################################################
 # クラス
