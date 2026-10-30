@@ -1,0 +1,351 @@
+--- repo/upload.html	2026-10-21 13:18:48.695320700 +0900
++++ mod2/upload.html	2026-10-21 16:13:53.030867700 +0900
+@@ -164,11 +164,27 @@
+     .action-btns { display: flex; flex-direction: column; gap: 8px; }
+     .dl-btn { background: var(--accent); color: #08111f; border: none; border-radius: 12px; padding: 14px; font-size: 14px; font-weight: 800; cursor: pointer; font-family: inherit; transition: opacity 0.2s; }
+     .dl-btn:hover { opacity: 0.9; }
++    /* 投稿規約への同意（同意するまでダウンロードできない） */
++    .dl-btn.needs-agree { opacity: 0.45; }
++    .terms-box { border: 1px solid var(--line); border-radius: 12px; padding: 12px 14px; margin-bottom: 12px; font-size: 12px; line-height: 1.75; color: #d6def0; }
++    .terms-box summary { cursor: pointer; font-weight: 700; color: var(--accent); }
++    .terms-box ol { margin: 8px 0 4px; padding-left: 1.4em; display: grid; gap: 4px; }
++    .terms-box .terms-note { font-size: 11px; color: var(--muted); }
++    .terms-agree { display: flex; align-items: center; gap: 8px; margin-top: 10px; font-weight: 700; cursor: pointer; }
++    .terms-agree input { width: 16px; height: 16px; accent-color: var(--accent); }
++    .terms-box.is-alert { border-color: #ff7878; }
+     .load-btn { background: transparent; border: 1px solid var(--line); color: var(--text); border-radius: 12px; padding: 11px; font-size: 13px; font-weight: 600; cursor: pointer; font-family: inherit; transition: border-color 0.2s; }
+     .load-btn:hover { border-color: var(--accent); color: var(--accent); }
+ 
+     .hint-box { background: rgba(94,162,255,0.05); border: 1px solid rgba(94,162,255,0.15); border-radius: 12px; padding: 14px; font-size: 12px; color: var(--muted); line-height: 1.6; }
+     .hint-box strong { color: var(--accent); }
++    /* 画像・動画をファイルから選ぶ */
++    .pick-file-btn { justify-self: start; display: inline-flex; align-items: center; gap: 6px; background: var(--bg); color: var(--accent); border: 1px dashed rgba(94,162,255,0.6); border-radius: 8px; padding: 6px 12px; font-size: 12px; font-weight: 700; cursor: pointer; font-family: inherit; }
++    .pick-file-btn:hover { background: rgba(94,162,255,0.08); }
++    .pick-file-info { font-size: 11px; color: var(--muted); line-height: 1.6; }
++    .pick-file-info strong { color: #d6def0; }
++    .pick-file-info video { display: block; max-width: 100%; max-height: 140px; margin-top: 4px; border-radius: 8px; border: 1px solid var(--line); }
++    .pick-file-info.is-warn { color: #ffb4a0; }
+ 
+     @media (max-width: 800px) {
+       .editor-wrap { grid-template-columns: 1fr; }
+@@ -325,6 +341,21 @@
+     <div class="e-card">
+       <div class="e-card-head"><h3>操作</h3></div>
+       <div class="e-card-body">
++        <div class="terms-box" id="termsBox">
++          <details id="termsDetails">
++            <summary>投稿規約（ダウンロードの前にお読みください）</summary>
++            <ol>
++              <li>投稿した記録（区間・奏法・機材・設定値・解説・画像・動画への参照）は、あなたが選んだライセンスのもとで公開され、その条件の範囲で誰でも再利用できます。</li>
++              <li>投稿者名（ハンドルネーム可）は、記録の作成者として公開されます。</li>
++              <li>画像・動画・文章は、自分で作成したもの、または権利者から利用の許諾を得たものだけを含めてください。</li>
++              <li>市販の楽譜やCD・配信音源などを複製したデータは含めないでください。楽曲本編はYouTube上の動画を参照します。</li>
++              <li>他の人の記録を引き継いで編集した場合は、原典の情報が自動で記録され、原典のライセンスが引き継がれます。</li>
++              <li>第三者の権利を侵害するおそれのある投稿や不適切な投稿は、運営者の判断で公開を停止することがあります。</li>
++            </ol>
++            <div class="terms-note">記録された機材名や設定値などの情報そのものに権利が生じるかは明確ではありませんが、再利用の条件を明示するため、すべての投稿にライセンスを付けています。</div>
++          </details>
++          <label class="terms-agree"><input type="checkbox" id="agreeTerms" /> 投稿規約に同意する</label>
++        </div>
+         <div class="action-btns">
+           <button class="dl-btn" id="dlBtn2">JSONをダウンロード</button>
+           <label class="load-btn" style="text-align:center; cursor:pointer;">
+@@ -334,6 +365,9 @@
+         </div>
+         <div class="hint-box">
+           ダウンロードした <strong>annotations.json</strong> をプロジェクトフォルダに置き、<strong>player.html</strong> を開くと再生されます。<br><br>
++          画像・動画を「ファイルを選ぶ」で指定した場合は、<strong>annotations.json と選んだファイルが1つのZIP</strong>にまとめてダウンロードされます。ZIPを展開し、中身（annotations.json・<strong>imgs/</strong>・<strong>videos/</strong> フォルダ）をそのままプロジェクトフォルダに置いてください。<br><br>
++          <span id="mediaCount"></span>
++          ※ページを再読み込みすると、選んだファイルは選び直しが必要です（下書き保存にはファイル本体は含まれません）。<br><br>
+           別ファイル名にした場合は <strong>?a=ファイル名.json</strong> をURLに付けてください。
+         </div>
+       </div>
+@@ -365,6 +399,9 @@
+   forkedFrom: null, // 引き継ぎ元の表示用情報（投稿者・ライセンス・タイトル）
+   knowledgeInfo: [] // [{type, title, ...}]  用語解説        → otoano:hasGlossary
+ };
++/* 「ファイルを選ぶ」で指定した画像・動画（パス → File／プレビュー用URL）。描画より前に用意しておく */
++const mediaFiles = new Map();
++const mediaUrls  = new Map();
+ let player = null;           // YouTube player
+ let activeSegIdx = null;     // 現在選択中のセグメントのインデックス
+ 
+@@ -871,7 +908,7 @@
+   const prev = d.querySelector('.ci-img-preview');
+   if (!prev) return;
+   prev.innerHTML = src
+-    ? `<img src="${escHtml(src)}" style="max-width:100%;max-height:100px;border-radius:8px;border:1px solid var(--line);object-fit:cover;" onerror="this.style.display='none'" />`
++    ? `<img src="${escHtml(mediaPreviewSrc(src))}" style="max-width:100%;max-height:100px;border-radius:8px;border:1px solid var(--line);object-fit:cover;" onerror="this.style.display='none'" />`
+     : '';
+ }
+ 
+@@ -936,7 +973,7 @@
+     } else if (item.type === 'videofile') {
+       fields = `
+         <div class="card-field"><label>タイトル</label><input type="text" class="ci-title" value="${escHtml(item.title)}" placeholder="例：ギターパートのみ" /></div>
+-        <div class="card-field"><label>動画ファイルのパス または URL（mp4等）</label><input type="text" class="ci-src" value="${escHtml(item.src || '')}" placeholder="例：videos/guitar.mp4" /></div>
++        <div class="card-field"><label>動画（ファイルを選ぶ，または videos/ 内のパス・URL を入力）</label><input type="text" class="ci-src" value="${escHtml(item.src || '')}" placeholder="例：videos/guitar.mp4" /></div>
+         <div class="card-field"><label>再生開始位置（秒）</label><input type="number" class="ci-start" value="${item.startTime || 0}" min="0" step="1" /></div>
+         <div class="card-field"><label>補足メモ</label><input type="text" class="ci-note" value="${escHtml(item.note || '')}" placeholder="補足説明" /></div>
+       `;
+@@ -953,7 +990,7 @@
+     } else if (item.type === 'image') {
+       fields = `
+         <div class="card-field"><label>タイトル</label><input type="text" class="ci-title" value="${escHtml(item.title)}" placeholder="画像のタイトル" /></div>
+-        <div class="card-field"><label>画像パス または URL</label><input type="text" class="ci-src" value="${escHtml(item.src)}" placeholder="例：imgs/photo.jpg" /></div>
++        <div class="card-field"><label>画像（ファイルを選ぶ，または imgs/ 内のパス・URL を入力）</label><input type="text" class="ci-src" value="${escHtml(item.src)}" placeholder="例：imgs/photo.jpg" /></div>
+         <div class="ci-img-preview" style="margin:4px 0;"></div>
+         <div class="card-field"><label>説明文</label><textarea class="ci-note" placeholder="画像の説明">${escHtml(item.note)}</textarea></div>
+       `;
+@@ -1235,7 +1272,7 @@
+     } else if (item.type === 'videofile') {
+       fields = `
+         <div class="card-field"><label>タイトル</label><input type="text" class="ci-title" value="${escHtml(item.title)}" placeholder="動画のタイトル" /></div>
+-        <div class="card-field"><label>動画ファイルのパス または URL（mp4等）</label><input type="text" class="ci-src" value="${escHtml(item.src)}" placeholder="例：videos/demo.mp4" /></div>
++        <div class="card-field"><label>動画（ファイルを選ぶ，または videos/ 内のパス・URL を入力）</label><input type="text" class="ci-src" value="${escHtml(item.src)}" placeholder="例：videos/demo.mp4" /></div>
+         <div class="card-field"><label>再生開始位置（秒）</label><input type="number" class="ci-start" value="${item.startTime || 0}" min="0" step="1" /></div>
+         <div class="card-field"><label>補足メモ</label><input type="text" class="ci-note" value="${escHtml(item.note)}" placeholder="補足説明" /></div>
+       `;
+@@ -1243,7 +1280,7 @@
+       fields = `
+         <div class="card-field"><label>タイトル</label><input type="text" class="ci-title" value="${escHtml(item.title)}" placeholder="画像のタイトル" /></div>
+         <div class="card-field">
+-          <label>画像パス（imgs/フォルダ内のファイル名 または URL）</label>
++          <label>画像（ファイルを選ぶ，または imgs/ 内のパス・URL を入力）</label>
+           <input type="text" class="ci-src" value="${escHtml(item.src)}" placeholder="例：imgs/photo.jpg" />
+         </div>
+         <div class="ci-img-preview" style="margin:4px 0;"></div>
+@@ -1300,7 +1337,7 @@
+         const prev = d.querySelector('.ci-img-preview');
+         if (prev) {
+           if (it.src) {
+-            prev.innerHTML = `<img src="${escHtml(it.src)}" style="max-width:100%;max-height:120px;border-radius:8px;border:1px solid var(--line);object-fit:cover;" onerror="this.style.display='none'" />`;
++            prev.innerHTML = `<img src="${escHtml(mediaPreviewSrc(it.src))}" style="max-width:100%;max-height:120px;border-radius:8px;border:1px solid var(--line);object-fit:cover;" onerror="this.style.display='none'" />`;
+           } else {
+             prev.innerHTML = '';
+           }
+@@ -1499,21 +1536,63 @@
+   }, facets);
+ }
+ 
+-function downloadJSON() {
++/* 投稿規約に同意しているか。未同意なら規約欄を開いて知らせる */
++function hasAgreedTerms() {
++  const cb = document.getElementById('agreeTerms');
++  if (cb && cb.checked) return true;
++  const box = document.getElementById('termsBox');
++  const det = document.getElementById('termsDetails');
++  if (det) det.open = true;
++  if (box) { box.classList.add('is-alert'); box.scrollIntoView({ behavior: 'smooth', block: 'center' }); }
++  alert('ダウンロードの前に投稿規約を確認し、「投稿規約に同意する」にチェックを入れてください。');
++  return false;
++}
++function refreshAgreeState() {
++  const ok = !!(document.getElementById('agreeTerms') || {}).checked;
++  ['dlBtn', 'dlBtn2'].forEach(id => {
++    const b = document.getElementById(id);
++    if (b) b.classList.toggle('needs-agree', !ok);
++  });
++  if (ok) { const box = document.getElementById('termsBox'); if (box) box.classList.remove('is-alert'); }
++}
++
++async function downloadJSON() {
++  if (!hasAgreedTerms()) return;
+   const data = buildJSON();
+   if (!data.videoId) { alert('YouTube URLを読み込んでください。'); return; }
+   const json = JSON.stringify(data, null, 2);
+-  const blob = new Blob([json], { type: 'application/json' });
++  const used = collectUsedMedia(data);   // 「ファイルを選ぶ」で指定したもののうち，記録で使われているもの
++  if (!used.length) {
++    saveBlob(new Blob([json], { type: 'application/json' }), 'annotations.json');
++    return;
++  }
++  const big = used.filter(p => mediaFiles.get(p).size > 100 * 1024 * 1024);
++  if (big.length && !confirm('100MBを超えるファイルがあります（' + big.join('，') + '）。GitHubには100MBを超えるファイルを置けないため、YouTubeに上げて「YouTube」カードで参照するのがおすすめです。このままZIPを作りますか？')) return;
++  try {
++    const entries = [{ name: 'annotations.json', data: new TextEncoder().encode(json) }];
++    for (const p of used) {
++      entries.push({ name: p, data: new Uint8Array(await mediaFiles.get(p).arrayBuffer()) });
++    }
++    saveBlob(buildZip(entries), 'annotations_with_media.zip');
++  } catch (e) {
++    alert('ZIPの作成に失敗しました：' + e.message);
++  }
++}
++function saveBlob(blob, filename) {
+   const url = URL.createObjectURL(blob);
+   const a = document.createElement('a');
+   a.href = url;
+-  a.download = 'annotations.json';
++  a.download = filename;
++  document.body.appendChild(a);
+   a.click();
+-  URL.revokeObjectURL(url);
++  a.remove();
++  setTimeout(() => URL.revokeObjectURL(url), 30000);
+ }
+ 
+ document.getElementById('dlBtn').addEventListener('click', downloadJSON);
+ document.getElementById('dlBtn2').addEventListener('click', downloadJSON);
++document.getElementById('agreeTerms').addEventListener('change', refreshAgreeState);
++refreshAgreeState();
+ 
+ /* =====================================================
+    下書き保存 / 読み込み (localStorage)
+@@ -1716,6 +1795,156 @@
+   e.target.value = '';
+ });
+ 
++/* =====================================================
++   画像・動画をファイルから選ぶ
++   ・選んだファイルは imgs/（画像）または videos/（動画）に置く前提のパスとして記録する
++   ・編集中のプレビューは手元のファイルをそのまま表示する
++   ・ダウンロード時に annotations.json と一緒にZIPにまとめる
++===================================================== */
++function mediaPreviewSrc(src) { return mediaUrls.get(src) || src; }
++function fmtSize(n) { return n >= 1048576 ? (n / 1048576).toFixed(1) + ' MB' : Math.max(1, Math.round(n / 1024)) + ' KB'; }
++let mediaSeq = 0;
++/* ZIPの展開先やURLで文字化けしないよう，保存名は半角英数字にする（日本語などは取り除き，残らなければ連番） */
++function safeFileName(name, kind) {
++  const n = String(name || '').normalize('NFC');
++  const dot = n.lastIndexOf('.');
++  const ext = dot > 0 ? n.slice(dot).toLowerCase().replace(/[^.a-z0-9]/g, '') : '';
++  let stem = (dot > 0 ? n.slice(0, dot) : n).replace(/[^A-Za-z0-9_-]+/g, '_').replace(/^_+|_+$/g, '');
++  if (!/[A-Za-z0-9]/.test(stem)) stem = (kind === 'video' ? 'video' : 'image') + String(++mediaSeq).padStart(2, '0');
++  return stem + ext;
++}
++function todayCompact() {
++  const d = new Date();
++  return d.getFullYear() + String(d.getMonth() + 1).padStart(2, '0') + String(d.getDate()).padStart(2, '0');
++}
++function registerMedia(file, kind) {
++  const dir = kind === 'video' ? 'videos/' : 'imgs/';
++  const base = todayCompact() + '_' + safeFileName(file.name, kind);
++  const dot = base.lastIndexOf('.');
++  let path = dir + base, n = 2;
++  while (mediaFiles.has(path)) {
++    const f = mediaFiles.get(path);
++    if (f.name === file.name && f.size === file.size && f.lastModified === file.lastModified) return path; // 同じファイル
++    path = dir + (dot > 0 ? base.slice(0, dot) + '-' + n + base.slice(dot) : base + '-' + n);
++    n++;
++  }
++  mediaFiles.set(path, file);
++  mediaUrls.set(path, URL.createObjectURL(file));
++  return path;
++}
++function collectUsedMedia(data) {
++  const used = new Set();
++  (function walk(v) {
++    if (Array.isArray(v)) { v.forEach(walk); return; }
++    if (v && typeof v === 'object') {
++      Object.keys(v).forEach(k => {
++        if (k === 'src' && typeof v[k] === 'string' && mediaFiles.has(v[k])) used.add(v[k]);
++        else walk(v[k]);
++      });
++    }
++  })(data);
++  return Array.from(used);
++}
++function refreshMediaCount() {
++  const el = document.getElementById('mediaCount');
++  if (!el) return;
++  const n = collectUsedMedia({ segments: state.segments, gearInfo: state.gearInfo, knowledgeInfo: state.knowledgeInfo }).length;
++  if (el.dataset.n === String(n)) return;   // 変化がなければ書き換えない（MutationObserver の無限ループ防止）
++  el.dataset.n = String(n);
++  el.innerHTML = n ? '現在，<strong>' + n + '件</strong>のファイルがZIPに入ります。<br>' : '';
++}
++function updatePickInfo(input) {
++  const info = input.parentNode && input.parentNode.querySelector('.pick-file-info');
++  if (!info) return;
++  const f = mediaFiles.get(input.value.trim());
++  if (!f) { info.innerHTML = ''; info.className = 'pick-file-info'; return; }
++  const isVideo = input.dataset.pickKind === 'video';
++  info.className = 'pick-file-info' + (f.size > 100 * 1024 * 1024 ? ' is-warn' : '');
++  info.innerHTML = '選んだファイル：<strong>' + escHtml(f.name) + '</strong>（' + fmtSize(f.size) + '）<br>保存先：' + escHtml(input.value.trim())
++    + (f.size > 100 * 1024 * 1024 ? '<br>100MBを超えています。GitHubに置けないため，YouTubeに上げて「YouTube」カードで参照してください。' : '')
++    + (isVideo ? '<video src="' + escHtml(mediaUrls.get(input.value.trim())) + '" controls muted preload="metadata"></video>' : '');
++}
++/* 画像・動画のパス入力欄（.ci-src）に「ファイルを選ぶ」ボタンを付ける */
++function attachFilePickers(root) {
++  (root || document).querySelectorAll('input.ci-src').forEach(input => {
++    if (input.dataset.picker) return;
++    input.dataset.picker = '1';
++    const field = input.closest('.card-field');
++    const label = field ? (field.querySelector('label') || {}).textContent || '' : '';
++    const kind = /動画/.test(label) ? 'video' : 'image';
++    input.dataset.pickKind = kind;
++    const btn = document.createElement('button');
++    btn.type = 'button';
++    btn.className = 'pick-file-btn';
++    btn.textContent = kind === 'video' ? '📁 動画ファイルを選ぶ' : '📁 画像ファイルを選ぶ';
++    const info = document.createElement('div');
++    info.className = 'pick-file-info';
++    input.insertAdjacentElement('afterend', btn);
++    btn.insertAdjacentElement('afterend', info);
++    btn.addEventListener('click', () => {
++      const fi = document.createElement('input');
++      fi.type = 'file';
++      fi.accept = kind === 'video' ? 'video/*' : 'image/*';
++      fi.addEventListener('change', () => {
++        const file = fi.files && fi.files[0];
++        if (!file) return;
++        input.value = registerMedia(file, kind);
++        input.dispatchEvent(new Event('input', { bubbles: true }));
++        input.dispatchEvent(new Event('change', { bubbles: true }));
++        updatePickInfo(input);
++        refreshMediaCount();
++      });
++      fi.click();
++    });
++    input.addEventListener('input', () => { updatePickInfo(input); refreshMediaCount(); });
++    updatePickInfo(input);
++  });
++}
++new MutationObserver(() => { attachFilePickers(document); refreshMediaCount(); }).observe(document.body, { childList: true, subtree: true });
++attachFilePickers(document);
++
++/* ZIP（無圧縮）を作る：外部ライブラリを使わない最小限の実装 */
++const CRC_TABLE = (() => {
++  const t = new Uint32Array(256);
++  for (let n = 0; n < 256; n++) { let c = n; for (let k = 0; k < 8; k++) c = (c & 1) ? (0xEDB88320 ^ (c >>> 1)) : (c >>> 1); t[n] = c >>> 0; }
++  return t;
++})();
++function crc32(u8) {
++  let c = 0xFFFFFFFF;
++  for (let i = 0; i < u8.length; i++) c = CRC_TABLE[(c ^ u8[i]) & 0xFF] ^ (c >>> 8);
++  return (c ^ 0xFFFFFFFF) >>> 0;
++}
++function buildZip(entries) {
++  const enc = new TextEncoder();
++  const now = new Date();
++  const dosTime = (now.getHours() << 11) | (now.getMinutes() << 5) | (now.getSeconds() >> 1);
++  const dosDate = ((now.getFullYear() - 1980) << 9) | ((now.getMonth() + 1) << 5) | now.getDate();
++  const parts = [], central = [];
++  let offset = 0;
++  entries.forEach(e => {
++    const name = enc.encode(e.name), data = e.data, crc = crc32(data);
++    const lh = new DataView(new ArrayBuffer(30));
++    lh.setUint32(0, 0x04034b50, true); lh.setUint16(4, 20, true); lh.setUint16(6, 0x0800, true); lh.setUint16(8, 0, true);
++    lh.setUint16(10, dosTime, true); lh.setUint16(12, dosDate, true); lh.setUint32(14, crc, true);
++    lh.setUint32(18, data.length, true); lh.setUint32(22, data.length, true); lh.setUint16(26, name.length, true); lh.setUint16(28, 0, true);
++    parts.push(new Uint8Array(lh.buffer), name, data);
++    const ch = new DataView(new ArrayBuffer(46));
++    ch.setUint32(0, 0x02014b50, true); ch.setUint16(4, 20, true); ch.setUint16(6, 20, true); ch.setUint16(8, 0x0800, true); ch.setUint16(10, 0, true);
++    ch.setUint16(12, dosTime, true); ch.setUint16(14, dosDate, true); ch.setUint32(16, crc, true);
++    ch.setUint32(20, data.length, true); ch.setUint32(24, data.length, true); ch.setUint16(28, name.length, true);
++    ch.setUint16(30, 0, true); ch.setUint16(32, 0, true); ch.setUint16(34, 0, true); ch.setUint16(36, 0, true); ch.setUint32(38, 0, true);
++    ch.setUint32(42, offset, true);
++    central.push(new Uint8Array(ch.buffer), name);
++    offset += 30 + name.length + data.length;
++  });
++  const cdSize = central.reduce((a, b) => a + b.length, 0);
++  const end = new DataView(new ArrayBuffer(22));
++  end.setUint32(0, 0x06054b50, true); end.setUint16(4, 0, true); end.setUint16(6, 0, true);
++  end.setUint16(8, entries.length, true); end.setUint16(10, entries.length, true);
++  end.setUint32(12, cdSize, true); end.setUint32(16, offset, true); end.setUint16(20, 0, true);
++  return new Blob([...parts, ...central, new Uint8Array(end.buffer)], { type: 'application/zip' });
++}
++
+ /* ===== ユーティリティ ===== */
+ function escHtml(str) {
+   return String(str || '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
